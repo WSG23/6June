@@ -4,9 +4,12 @@ Simple test to debug the CSV loader service
 """
 
 import io
+import logging
 import pandas as pd
 from services.csv_loader import load_csv_event_log
-from constants import REQUIRED_INTERNAL_COLUMNS
+from config.settings import REQUIRED_INTERNAL_COLUMNS
+
+logger = logging.getLogger(__name__)
 
 def test_loader_debug():
     """Debug the CSV loader service"""
