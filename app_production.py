@@ -2,17 +2,12 @@
 import dash
 import sys
 import os
-import logging
 from waitress import serve
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import dash_bootstrap_components as dbc
-
-# Import configuration
-from config.settings import get_settings
-from config.app_config import get_config
 
 # Import UI components and handlers
 from ui.components.upload import create_enhanced_upload_component
@@ -49,7 +44,6 @@ def create_production_app():
     ICON_UPLOAD_DEFAULT = app.get_asset_url('upload_file_csv_icon.png')
     ICON_UPLOAD_SUCCESS = app.get_asset_url('upload_file_csv_icon_success.png') 
     ICON_UPLOAD_FAIL = app.get_asset_url('upload_file_csv_icon_fail.png')
-    MAIN_LOGO_PATH = app.get_asset_url('logo_white.png')
     
     # Create UI components
     upload_component = create_enhanced_upload_component(
