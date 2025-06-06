@@ -1,218 +1,543 @@
+/* assets/styles.css - FIXED VERSION - Simplified and Conflict-Free */
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   CSS CUSTOM PROPERTIES
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
 :root {
-  /* Base font sizes */
-  --font-size-base: 16px;
-  --font-size-sm: 14px;
-  --font-size-md: 18px;
-  --font-size-lg: 24px;
-  --font-size-xl: 32px;
-
-  /* Card & layout spacing */
-  --card-padding: 20px;
-  --card-radius: 12px;
-  --card-gap: 20px;
-  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-  /* Button styling */
-  --btn-padding: 10px 20px;
-  --btn-radius: 8px;
+  --color-primary: #1B2A47;
+  --color-accent: #2196F3;
+  --color-accent-hover: #42A5F5;
+  --color-success: #2DBE6C;
+  --color-warning: #FFB020;
+  --color-critical: #E02020;
+  --color-background: #0F1419;
+  --color-surface: #1A2332;
+  --color-border: #2D3748;
+  --color-text-primary: #F7FAFC;
+  --color-text-secondary: #E2E8F0;
+  --color-text-tertiary: #A0AEC0;
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
 }
 
-
-/* ─────────────────────────────────────────────────────────────────────────────────
-   BODY + TYPOGRAPHY
-   ───────────────────────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════════════════════════════════ */
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-  font-size: var(--font-size-base);
-  line-height: 1.6;
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
+  background-color: var(--color-background) !important;
+  color: var(--color-text-primary) !important;
+  line-height: 1.5;
   margin: 0;
   padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  color: var(--color-text-primary);
-  margin-bottom: 8px;
-  font-weight: 600;
+* {
+  box-sizing: border-box;
 }
 
-h1 { font-size: var(--font-size-xl); }
-h2 { font-size: var(--font-size-lg); }
-h3 { font-size: var(--font-size-md); }
+/* ═══════════════════════════════════════════════════════════════════════════════
+   UPLOAD AREA STYLING
+   ═══════════════════════════════════════════════════════════════════════════════ */
 
-/* ─────────────────────────────────────────────────────────────────────────────────
-   CARD GRID STYLING
-   ───────────────────────────────────────────────────────────────────────────────── */
-#stats-panels-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--card-gap);
-  margin: 20px;
+#upload-data {
+  transition: all var(--transition-normal) !important;
 }
 
-.stat-card {
-  background-color: var(--color-surface);
-  padding: var(--card-padding);
-  border-radius: var(--card-radius);
-  box-shadow: var(--card-shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-}
-
-.card-title {
-  font-size: var(--font-size-md);
-  margin-bottom: 10px;
-}
-
-.card-value {
-  font-size: var(--font-size-lg);
-  margin-bottom: 6px;
-}
-
-.card-subtext {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────────
-   BUTTON STYLING
-   ───────────────────────────────────────────────────────────────────────────────── */
-button, .dash-button {
-  padding: var(--btn-padding);
-  border-radius: var(--btn-radius);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-  text-transform: none;
-  background-color: var(--color-accent) !important;
-  color: #ffffff !important;
-  border: none !important;
-}
-
-
-button:hover, .dash-button:hover {
+#upload-data:hover {
+  border-color: var(--color-accent) !important;
+  background-color: rgba(33, 150, 243, 0.05) !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(33, 150, 243, 0.25);
+}
+
+#upload-icon {
+  transition: all var(--transition-normal) !important;
+}
+
+#upload-data:hover #upload-icon {
+  transform: scale(1.05);
+  opacity: 1 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+button {
+  transition: all var(--transition-fast) !important;
+  font-family: inherit;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+#confirm-and-generate-button:hover {
+  background-color: var(--color-accent-hover) !important;
+  box-shadow: var(--shadow-lg);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   RADIO TOGGLE STYLING - FIXED
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+#manual-map-toggle {
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 15px !important;
+  margin: 15px 0 !important;
+}
+
+/* Hide radio inputs completely */
+#manual-map-toggle input[type="radio"] {
+  display: none !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  pointer-events: none !important;
+}
+
+/* Style labels as buttons */
+#manual-map-toggle label {
+  display: inline-block !important;
+  background-color: var(--color-border) !important;
+  color: var(--color-text-tertiary) !important;
+  border: 2px solid var(--color-border) !important;
+  border-radius: 20px !important;
+  padding: 12px 24px !important;
+  margin: 0 8px !important;
+  cursor: pointer !important;
+  transition: all var(--transition-normal) !important;
+  font-weight: 500 !important;
+  min-width: 120px !important;
+  text-align: center !important;
+  user-select: none !important;
+  font-size: 0.95rem !important;
+  box-shadow: var(--shadow-sm) !important;
+  font-family: inherit !important;
+}
+
+/* Hover state */
+#manual-map-toggle label:hover {
+  background-color: #4A5568 !important;
+  border-color: #4A5568 !important;
+  transform: translateY(-1px) !important;
+  color: var(--color-text-secondary) !important;
+}
+
+/* Selected states - CRITICAL STYLES */
+#manual-map-toggle input[value="no"]:checked + label {
+  background-color: var(--color-critical) !important;
+  border-color: var(--color-critical) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(224, 32, 32, 0.3) !important;
+}
+
+#manual-map-toggle input[value="yes"]:checked + label {
+  background-color: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3) !important;
+}
+
+/* Focus styles for accessibility */
+#manual-map-toggle input[type="radio"]:focus + label {
+  outline: 2px solid var(--color-accent) !important;
+  outline-offset: 2px !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   DROPDOWN STYLING
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.Select-control {
+  background-color: var(--color-surface) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text-primary) !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.Select-control:hover {
+  border-color: var(--color-accent) !important;
+}
+
+.Select-menu-outer {
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-lg) !important;
+  z-index: 1000 !important;
+}
+
+.Select-option {
+  background: transparent !important;
+  color: var(--color-text-primary) !important;
+  transition: background var(--transition-fast) !important;
+}
+
+.Select-option:hover {
+  background-color: var(--color-accent) !important;
+  color: white !important;
+}
+
+.Select-value-label {
+  color: var(--color-text-primary) !important;
+}
+
+.Select-placeholder {
+  color: var(--color-text-tertiary) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   SLIDER STYLING
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.rc-slider-rail {
+  background-color: var(--color-border) !important;
+  height: 6px !important;
+  border-radius: 3px !important;
+}
+
+.rc-slider-track {
+  background-color: var(--color-accent) !important;
+  height: 6px !important;
+  border-radius: 3px !important;
+}
+
+.rc-slider-handle {
+  border: 2px solid white !important;
+  background-color: var(--color-accent) !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin-top: -5px !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.rc-slider-handle:hover,
+.rc-slider-handle:focus {
+  box-shadow: 0 0 10px rgba(33, 150, 243, 0.5) !important;
   background-color: var(--color-accent-hover) !important;
 }
 
-
-button:active {
-  transform: scale(0.98);
+.rc-slider-mark-text {
+  color: var(--color-text-tertiary) !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
 }
 
-
-/* ─────────────────────────────────────────────────────────────────────────────────
-   HEADER & UPLOAD SECTION
-   ───────────────────────────────────────────────────────────────────────────────── */
-#dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--color-surface);
-  padding: 20px;
-  border-radius: var(--card-radius);
-  box-shadow: var(--card-shadow);
-  margin: 20px;
-
+.rc-slider-mark-text-active {
+  color: var(--color-accent) !important;
+  font-weight: 600 !important;
 }
 
-#upload-section {
-  background-color: var(--color-surface);
-  padding: var(--card-padding);
-  border-radius: var(--card-radius);
-  box-shadow: var(--card-shadow);
+/* ═══════════════════════════════════════════════════════════════════════════════
+   STATISTICS PANELS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+/* display is controlled dynamically via Dash callbacks */
+/*#stats-panels-container {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: space-around !important;
+  gap: 20px !important;
+  margin: 20px auto !important;
+  max-width: 1200px !important;
+} */
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+#stats-panels-container > div {
+  transition: all var(--transition-normal) !important;
+  border: 1px solid var(--color-border) !important;
 }
 
-.upload-box {
-
-  border: 2px dashed var(--color-accent);
-  border-radius: var(--card-radius);
-  padding: 40px;
-  text-align: center;
-  width: 100%;
-  max-width: 600px;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+#stats-panels-container > div:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-lg) !important;
 }
 
-
-.upload-box:hover {
-  background-color: rgba(33, 150, 243, 0.05);
-  border-color: var(--color-accent-hover);
+#stats-panels-container h1 {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin: 10px 0 !important;
+  color: var(--color-accent) !important;
 }
 
-
-/* ─────────────────────────────────────────────────────────────────────────────────
-   CHART CONTROLS
-   ───────────────────────────────────────────────────────────────────────────────── */
-
-#chart-controls {
-  background-color: var(--color-surface);
-  padding: var(--card-padding);
-  border-radius: var(--card-radius);
-  box-shadow: var(--card-shadow);
-
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 20px;
+#stats-panels-container h3 {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 15px !important;
+  color: var(--color-text-primary) !important;
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────────
-   TABS CONTAINER
-   ───────────────────────────────────────────────────────────────────────────────── */
-#tabs-container {
-  display: flex;
-  gap: 10px;
-  margin: 0 20px 20px 20px;
+#stats-panels-container p {
+  font-size: 0.9rem !important;
+  margin: 5px 0 !important;
+  color: var(--color-text-secondary) !important;
 }
 
-.tab {
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: var(--btn-radius);
-  background-color: var(--color-border);
-  color: var(--color-text-secondary);
-  font-weight: 500;
-  transition: background-color 0.2s ease, color 0.2s ease;
+#stats-panels-container table {
+  width: 100% !important;
+  font-size: 0.8rem !important;
 }
 
-
-.tab.active {
-  background-color: var(--color-accent);
-  color: var(--color-text-primary);
+#stats-panels-container th {
+  color: var(--color-text-primary) !important;
+  font-weight: 600 !important;
+  padding: 5px !important;
+  border-bottom: 1px solid var(--color-border) !important;
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────────
-   EXPORT CONTROLS
-   ───────────────────────────────────────────────────────────────────────────────── */
-#export-buttons {
-  display: flex;
-  gap: 10px;
-  margin: 20px;
+#stats-panels-container td {
+  padding: 5px !important;
+  color: var(--color-text-secondary) !important;
+  border-bottom: 1px solid rgba(45, 55, 72, 0.3) !important;
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────────
-   RESPONSIVE ADJUSTMENTS
-   ───────────────────────────────────────────────────────────────────────────────── */
+#stats-panels-container tr:hover td {
+  background-color: rgba(33, 150, 243, 0.1) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   GRAPH STYLING
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+#onion-graph {
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+#tap-node-data-output {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text-secondary) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-md) !important;
+  font-family: 'Fira Code', monospace !important;
+  transition: all var(--transition-fast) !important;
+}
+
+#tap-node-data-output:hover {
+  background-color: var(--color-border) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   PROCESSING STATUS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+#processing-status {
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(33, 150, 243, 0.2)) !important;
+  border: 1px solid rgba(33, 150, 243, 0.3) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 15px 20px !important;
+  margin: 20px auto !important;
+  max-width: 600px !important;
+  text-align: center !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  color: var(--color-accent) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   FORM ELEMENTS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+input, select, textarea {
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-text-primary) !important;
+  border-radius: var(--radius-md) !important;
+  transition: all var(--transition-fast) !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-accent) !important;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1) !important;
+  outline: none !important;
+}
+
+label {
+  color: var(--color-text-primary) !important;
+  font-weight: 500 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   SCROLLBAR STYLING
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+  transition: background var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
 @media (max-width: 768px) {
-  #dashboard-header, #upload-section, #chart-controls, #tabs-container {
-
-    flex-direction: column;
-    align-items: stretch;
+  #stats-panels-container {
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+  
+  #stats-panels-container > div {
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 400px !important;
+  }
+  
+  #manual-map-toggle {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  #manual-map-toggle label {
+    min-width: 150px !important;
+    margin: 0 !important;
+  }
+  
+  #upload-data {
+    width: 90% !important;
+    min-height: 150px !important;
+  }
+  
+  #upload-icon {
+    width: 80px !important;
+    height: 80px !important;
   }
 }
 
-/* === custom.css END === */
+@media (max-width: 576px) {
+  body {
+    font-size: 14px !important;
+  }
+  
+  h1, h2, h3, h4 {
+    font-size: 1.2em !important;
+  }
+  
+  #manual-map-toggle label {
+    padding: 10px 20px !important;
+    font-size: 0.9rem !important;
+  }
+}
 
+/* ═══════════════════════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.text-center { text-align: center !important; }
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+
+.mt-10 { margin-top: 10px !important; }
+.mt-20 { margin-top: 20px !important; }
+.mb-10 { margin-bottom: 10px !important; }
+.mb-20 { margin-bottom: 20px !important; }
+
+.p-10 { padding: 10px !important; }
+.p-20 { padding: 20px !important; }
+
+.border-radius { border-radius: var(--radius-md) !important; }
+.box-shadow { box-shadow: var(--shadow-md) !important; }
+
+.transition { transition: all var(--transition-normal) !important; }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   FIXES FOR DASH COMPONENTS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* Ensure Dash components inherit theme colors */
+div[data-dash-is-loading="true"] {
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-md) !important;
+}
+
+/* Fix for RadioItems component */
+.form-check-input {
+  background-color: var(--color-surface) !important;
+  border-color: var(--color-border) !important;
+}
+
+.form-check-label {
+  color: var(--color-text-primary) !important;
+}
+
+/* Fix for loading states */
+._dash-loading {
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-md) !important;
+}
+
+/* Ensure all text is readable */
+* {
+  color: inherit;
+}
+
+/* Final override for any missed text elements */
+p, span, div, li, td, th {
+  color: var(--color-text-primary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-primary) !important;
+}
