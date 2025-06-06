@@ -4,7 +4,8 @@ Enhanced statistics component with advanced metrics, charts, and export features
 """
 
 from dash import html, dcc
-from ui.components.graph import create_graph_container ###
+import dash_cytoscape as cyto
+from ui.themes.graph_styles import actual_default_stylesheet_for_graph
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -231,12 +232,12 @@ class EnhancedStatsComponent:
                     dcc.Graph(id='security-pie-chart', style={'height': '300px'})
                 ], style={'flex': '1', 'margin': '0 10px'}),
                 html.Div([
-                    create_graph_container()], style={'flex': '1', 'margin': '0 10px'}),
+                    self.create_mini_graph_container()], style={'flex': '1', 'margin': '0 10px'}),
                 html.Div([
                     dcc.Graph(id='heatmap-chart', style={'height': '300px'})
                 ], style={'flex': '1', 'margin': '0 10px'})
             ], style={'display': 'flex', 'marginTop': '20px'})
-            
+
         ], style={
             'padding': '20px',
             'backgroundColor': COLORS['surface'],
@@ -244,6 +245,22 @@ class EnhancedStatsComponent:
             'margin': '20px 0',
             'border': f'1px solid {COLORS["border"]}'
         })
+
+    def create_mini_graph_container(self):
+        """Small graph container with unique IDs to avoid duplicates"""
+        return html.Div(
+            id='mini-graph-container',
+            style={'display': 'none'},
+            children=[
+                cyto.Cytoscape(
+                    id='mini-onion-graph',
+                    layout={'name': 'cose', 'fit': True},
+                    style={'width': '100%', 'height': '300px'},
+                    elements=[],
+                    stylesheet=actual_default_stylesheet_for_graph
+                )
+            ]
+        )
     
     def create_export_section(self):
         """NEW: Export and download section"""

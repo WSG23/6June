@@ -1170,12 +1170,14 @@ def update_floor_display_v6(value):
         Output('charts-section', 'style'),
         Output('export-section', 'style'),
         Output('graph-output-container', 'style'),
+        Output('mini-graph-container', 'style'),
         
         # Basic stats outputs (maintaining compatibility)
         Output('total-access-events-H1', 'children'),
         Output('event-date-range-P', 'children'),
         Output('most-active-devices-table-body', 'children'),
         Output('onion-graph', 'elements'),
+        Output('mini-onion-graph', 'elements'),
         Output('processing-status', 'children', allow_duplicate=True),
         
         # Enhanced stats outputs (if available)
@@ -1232,9 +1234,9 @@ def generate_comprehensive_enhanced_analysis_v6(n_clicks, file_data, processed_d
         hide_style = {'display': 'none'}
         empty_figure = {'data': [], 'layout': {'title': 'No data available', 'plot_bgcolor': '#0F1419', 'paper_bgcolor': '#1A2332', 'font': {'color': '#F7FAFC'}}}
         
-        return ([hide_style] * 6 +  # Visibility
-                ['0', 'No data', [], [], "Click generate to start Version 6.0 comprehensive analysis"] +  # Basic stats
-                ['No data'] * 8 +  # Enhanced stats  
+        return ([hide_style] * 7 +  # Visibility
+                ['0', 'No data', [], [], [], "Click generate to start Version 6.0 comprehensive analysis"] +  # Basic stats
+                ['No data'] * 8 +  # Enhanced stats
                 ['No data'] * 12 +  # Advanced analytics
                 [empty_figure] * 3 +  # Charts
                 [None])  # Metrics store
@@ -1347,13 +1349,14 @@ def generate_comprehensive_enhanced_analysis_v6(n_clicks, file_data, processed_d
         print("✅ Version 6.0 comprehensive enhanced analysis completed successfully")
         
         return (
-            # Visibility outputs (6)
-            show_style, stats_style, show_style, show_style, show_style, show_style,
-            
-            # Basic stats outputs (5)
+            # Visibility outputs (7)
+            show_style, stats_style, show_style, show_style, show_style, show_style, show_style,
+
+            # Basic stats outputs (6)
             f"{enhanced_metrics.get('total_events', 0):,}",
             enhanced_metrics.get('date_range', 'Jan 1 - Dec 31, 2024'),
             device_table,
+            graph_elements,
             graph_elements,
             "🎉 Version 6.0 comprehensive enhanced analysis complete! Explore your advanced analytics dashboard with detailed insights, interactive charts, and export capabilities.",
             
@@ -1398,8 +1401,8 @@ def generate_comprehensive_enhanced_analysis_v6(n_clicks, file_data, processed_d
         hide_style = {'display': 'none'}
         error_figure = {'data': [], 'layout': {'title': f'Analysis Error: {str(e)}', 'plot_bgcolor': '#0F1419', 'paper_bgcolor': '#1A2332', 'font': {'color': '#F7FAFC'}}}
         
-        return ([hide_style] * 6 +  # Visibility
-                ['Error', 'Error', [], [], f"❌ Version 6.0 Analysis Error: {str(e)}"] +  # Basic stats
+        return ([hide_style] * 7 +  # Visibility
+                ['Error', 'Error', [], [], [], f"❌ Version 6.0 Analysis Error: {str(e)}"] +  # Basic stats
                 ['Error'] * 8 +  # Enhanced stats
                 ['Error'] * 12 +  # Advanced analytics
                 [error_figure] * 3 +  # Charts
