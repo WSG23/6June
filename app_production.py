@@ -51,13 +51,31 @@ def create_production_app():
     ICON_UPLOAD_FAIL = app.get_asset_url('upload_file_csv_icon_fail.png')
     MAIN_LOGO_PATH = app.get_asset_url('logo_white.png')
     
+    # Create UI components
+    upload_component = create_enhanced_upload_component(
+        ICON_UPLOAD_DEFAULT,
+        ICON_UPLOAD_SUCCESS,
+        ICON_UPLOAD_FAIL
+    )
+    mapping_component = create_mapping_component()
+    classification_component = create_classification_component()
+
+    # Register callbacks using handler factories
+    icons = {
+        'default': ICON_UPLOAD_DEFAULT,
+        'success': ICON_UPLOAD_SUCCESS,
+        'fail': ICON_UPLOAD_FAIL,
+    }
+    create_upload_handlers(app, upload_component, icons).register_callbacks()
+    create_mapping_handlers(app, mapping_component).register_callbacks()
+    create_classification_handlers(app, classification_component).register_callbacks()
+
     # Create main layout
     app.layout = create_main_layout(app)
-    
-    # Placeholder for registering callbacks using handler factories
+
     logger.info("✅ Production app created successfully")
     return app
 
 if __name__ == "__main__":
     app = create_production_app()
-    app.run_server(debug=False, host='0.0.0.0', port=8050)
+    serve(app.server, host='0.0.0.0', port=8050)
