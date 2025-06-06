@@ -65,6 +65,7 @@ def advanced_layout():
                         ],
                     ),
                     html.Div(
+
                         id="card-security",
                         className="stat-card",
                         children=[
@@ -101,10 +102,12 @@ def export_layout():
             html.Div(
                 id="export-buttons",
                 children=[
+
                     html.Button("📊 Export Stats CSV", id="export-csv", className="dash-button"),
                     html.Button("📉 Download Charts", id="download-charts", className="dash-button"),
                     html.Button("🧾 Generate Report", id="generate-report", className="dash-button"),
                     html.Button("🔄 Refresh Data", id="refresh-data", className="dash-button"),
+
                 ],
             )
         ],
@@ -117,18 +120,23 @@ def create_main_layout(app_instance: Dash) -> html.Div:
         children=[
             # ─────── Dashboard Header ───────
             html.Div(
+
                 id="dashboard-title",
+
                 children=[
                     html.Div(
                         children=[
                             html.Img(src=app_instance.get_asset_url("logo.png"), style={"height": "40px"}),
+
                             html.H1(
                                 " Enhanced Analytics Dashboard",
                                 className="ml-2",
+
                             ),
                         ],
                         style={"display": "flex", "alignItems": "center"},
                     ),
+
                     html.Button("Advanced View ⏷", id="advanced-view-button", n_clicks=0),
                 ],
             ),
@@ -180,6 +188,7 @@ def create_main_layout(app_instance: Dash) -> html.Div:
                                     html.Button("🔍 Filter", id="filter-button", className="dash-button"),
                                     html.Button(
                                         "🧭 Time Range",
+
                                         id="timerange-button",
                                         className="dash-button",
                                         style={"marginLeft": "10px"},

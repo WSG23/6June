@@ -1,7 +1,6 @@
 /* ---------------------------------------------
    UPDATED custom.css: Enhanced UI polish
    --------------------------------------------- */
-
 :root {
   /* Base font sizes */
   --font-size-base: 16px;
@@ -38,6 +37,7 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-text-primary);
   margin-bottom: 8px;
   font-weight: 600;
+
 }
 
 h1 { font-size: var(--font-size-xl); }
@@ -87,6 +87,7 @@ button:hover, .dash-button:hover {
   background-color: var(--color-accent-hover) !important;
 }
 
+=
 button:active {
   transform: scale(0.98);
 }
@@ -94,6 +95,7 @@ button:active {
 /* ─────────────────────────────────────────────────────────────────────────────────
    HEADER & UPLOAD SECTION
    ───────────────────────────────────────────────────────────────────────────────── */
+
 #dashboard-title {
   background-color: var(--color-surface);
   padding: 20px;
@@ -103,6 +105,7 @@ button:active {
   border-radius: var(--card-radius);
   box-shadow: var(--card-shadow);
   margin-bottom: 20px;
+
 }
 
 #upload-section {
@@ -110,6 +113,7 @@ button:active {
   padding: var(--card-padding);
   border-radius: var(--card-radius);
   box-shadow: var(--card-shadow);
+
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
@@ -117,6 +121,7 @@ button:active {
 }
 
 #upload-section .upload-box {
+
   border: 2px dashed var(--color-accent);
   border-radius: var(--card-radius);
   padding: 40px;
@@ -125,6 +130,7 @@ button:active {
   max-width: 600px;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
+
 
 #upload-section .upload-box:hover {
   background-color: rgba(33, 150, 243, 0.05);
@@ -139,17 +145,20 @@ button:active {
   padding: var(--card-padding);
   border-radius: var(--card-radius);
   box-shadow: var(--card-shadow);
+
   margin-bottom: 20px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
+
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────────
    TABS CONTAINER
    ───────────────────────────────────────────────────────────────────────────────── */
 #tabs-container {
+
   background-color: var(--color-surface);
   padding: var(--card-padding);
   border-radius: var(--card-radius);
@@ -161,6 +170,7 @@ button:active {
 
 #tabs-container .tab {
   padding: 8px 16px;
+
   cursor: pointer;
   border-radius: var(--btn-radius);
   background-color: var(--color-border);
@@ -168,6 +178,7 @@ button:active {
   font-weight: 500;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+
 
 #tabs-container .tab.active {
   background-color: var(--color-accent);
@@ -186,18 +197,21 @@ button:active {
 #export-buttons .dash-button {
   background-color: var(--color-accent);
   color: white !important;
+
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────────
    RESPONSIVE ADJUSTMENTS
    ───────────────────────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
+
   #stats-panels-container > div {
     flex: 1 1 100%;
   }
   #dashboard-title, #upload-section, #chart-controls, #tabs-container {
+
     flex-direction: column;
     align-items: stretch;
   }
 }
-/* --- custom.css END --- */
+
