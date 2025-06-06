@@ -9,6 +9,8 @@ from typing import Dict, Tuple, Optional, Any
 import mimetypes
 import hashlib
 import logging
+import os
+import json
 
 from core.exceptions import FileProcessingError, ValidationError
 from utils.validators import CSVValidator
@@ -155,28 +157,40 @@ class SecureFileHandler:
         """Validate file type and basic structure"""
         # MIME type validation
         mime_type, _ = mimetypes.guess_type(filename)
-        if mime_type and not mime_type.startswith('text/'):
-            logger.warning(f"Unexpected MIME type for CSV: {mime_type}")
-        
-        # Basic CSV structure validation
-        lines = contents.split('\n')
-        if len(lines) < 2:
-            raise ValidationError("CSV file must have at least a header and one data row")
-        
-        # Check for common CSV patterns
-        first_line = lines[0].strip()
-        if not first_line:
-            raise ValidationError("CSV file appears to be empty")
-        
-        # Basic delimiter detection
-        common_delimiters = [',', ';', '\t', '|']
-        delimiter_counts = {delim: first_line.count(delim) for delim in common_delimiters}
-        max_delimiter = max(delimiter_counts.values())
-        
-        if max_delimiter == 0:
-            raise ValidationError("No common CSV delimiters found in header row")
-        
-        logger.info(f"File validation passed. Detected {len(lines)} lines, likely delimiter has {max_delimiter} occurrences")
+        ext = os.path.splitext(filename)[1].lower()
+        if ext == '.csv':
+            if mime_type and not mime_type.startswith('text/'):
+                logger.warning(f"Unexpected MIME type for CSV: {mime_type}")
+
+            # Basic CSV structure validation
+            lines = contents.split('\n')
+            if len(lines) < 2:
+                raise ValidationError("CSV file must have at least a header and one data row")
+
+            first_line = lines[0].strip()
+            if not first_line:
+                raise ValidationError("CSV file appears to be empty")
+
+            common_delimiters = [',', ';', '\t', '|']
+            delimiter_counts = {delim: first_line.count(delim) for delim in common_delimiters}
+            max_delimiter = max(delimiter_counts.values())
+
+            if max_delimiter == 0:
+                raise ValidationError("No common CSV delimiters found in header row")
+
+            logger.info(
+                f"File validation passed. Detected {len(lines)} lines, likely delimiter has {max_delimiter} occurrences"
+            )
+        elif ext == '.json':
+            if mime_type not in ['application/json', 'text/json', 'text/plain', None]:
+                logger.warning(f"Unexpected MIME type for JSON: {mime_type}")
+            try:
+                json.loads(contents)
+            except Exception as e:
+                raise ValidationError(f"Invalid JSON file: {str(e)}")
+            logger.info("JSON file validation passed")
+        else:
+            raise ValidationError("Unsupported file type")
     
     def _generate_file_hash(self, contents: str) -> str:
         """Generate SHA-256 hash of file contents for integrity checking"""
