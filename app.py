@@ -841,6 +841,7 @@ print(f"📊 Components status: {components_available}")
         Output('processing-status', 'children'),
         Output('all-doors-from-csv-store', 'data'),
         Output('interactive-setup-container', 'style'),
+        Output('mapping-ui-section', 'style'),
         Output('upload-data', 'style'),
         Output('processed-data-store', 'data'),  # Store processed data
         Output('upload-icon', 'src'),            # NEW: change icon on success/fail
@@ -853,7 +854,17 @@ def enhanced_file_upload_with_processing_v6(contents, filename):
     """Version 6.0 - Enhanced upload callback with comprehensive processing"""
     print(f"🔄 Version 6.0 upload callback triggered: {filename}")
     if not contents:
-        return None, None, "", None, {'display': 'none'}, {}, None, ICON_UPLOAD_DEFAULT
+        return (
+            None,
+            None,
+            "",
+            None,
+            {'display': 'none'},
+            {'display': 'none'},
+            {},
+            None,
+            ICON_UPLOAD_DEFAULT,
+        )
     
     try:
         print(f"📄 Processing file: {filename}")
@@ -939,6 +950,9 @@ def enhanced_file_upload_with_processing_v6(contents, filename):
             'border': '1px solid #2D3748',
             'boxShadow': '0 10px 15px rgba(0, 0, 0, 0.1)'
         }
+
+        # Show mapping section on successful upload
+        mapping_style = {'display': 'block'}
         
         # Enhanced upload success style
         upload_success_style = {
@@ -951,12 +965,14 @@ def enhanced_file_upload_with_processing_v6(contents, filename):
         }
         
         print("✅ Version 6.0 enhanced upload successful with comprehensive data processing")
+        status = f"✅ Uploaded: {filename} ({len(df)} rows, {len(headers)} columns)"
         return (
             contents,
             headers,
-            f"✅ Uploaded: {filename} ({len(df):,} rows, {len(headers)} columns) - Ready for Version 6.0 enhanced analytics!",
+            status,
             doors,
             setup_style,
+            mapping_style,
             upload_success_style,
             processed_data,
             ICON_UPLOAD_SUCCESS,
@@ -970,6 +986,7 @@ def enhanced_file_upload_with_processing_v6(contents, filename):
             None,
             f"❌ Error processing {filename}: {str(e)}",
             None,
+            {'display': 'none'},
             {'display': 'none'},
             {},
             None,
