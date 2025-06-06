@@ -1,151 +1,248 @@
 import dash
-from dash import html, dcc, callback, Output, Input
+from dash import Dash, html, dcc, Input, Output
 
-# Create temporary Dash instance to build asset URL
-_tmp = dash.Dash(__name__)
+# Temporary Dash app to generate asset URL
+_tmp = Dash(__name__)
 CUSTOM_CSS = _tmp.get_asset_url("custom.css")
 
 # Main Dash app with external stylesheet
-app = dash.Dash(
-    __name__,
-    external_stylesheets=[CUSTOM_CSS],
-    suppress_callback_exceptions=True,
-)
+app = Dash(__name__, external_stylesheets=[CUSTOM_CSS], suppress_callback_exceptions=True)
 
 
-def overview_content():
+def overview_layout():
     return html.Div(
-        id="stats-panels-container",
-        children=[
-            html.Div([html.H3("Access Events")], id="card-access"),
-            html.Div([html.H3("Device Analytics")], id="card-device"),
-            html.Div([html.H3("Peak Activity")], id="card-peak"),
-        ],
-    )
-
-
-def advanced_content():
-    return html.Div(
-        id="stats-panels-container",
-        children=[
-            html.Div([html.H3("Traffic Pattern")], id="card-traffic"),
-            html.Div([html.H3("Anomaly Detection")], id="card-anomaly"),
-            html.Div([html.H3("Usage Efficiency")], id="card-usage"),
-            html.Div([html.H3("Security Score")], id="card-security"),
-        ],
-    )
-
-
-def export_content():
-    return html.Div(
-        id="export-buttons",
-        children=[
-            html.Button("\ud83d\udcca Export CSV", className="dash-button"),
-            html.Button("\ud83d\udcc9 Download Charts", className="dash-button"),
-            html.Button("\ud83e\uddfe Generate Report", className="dash-button"),
-            html.Button("\ud83d\udd04 Refresh Data", className="dash-button"),
-        ],
-    )
-
-
-def create_main_layout(app_instance: dash.Dash) -> html.Div:
-    return html.Div(
+        id="overview-content",
         children=[
             html.Div(
-                id="dashboard-title",
+                id="stats-panels-container",
                 children=[
                     html.Div(
-                        [
-                            html.Img(
-                                src=app_instance.get_asset_url("logo.png"),
-                                style={"height": "40px"},
-                            ),
-                            html.H1("Enhanced Analytics Dashboard", className="ml-2"),
+                        id="card-access",
+                        className="stat-card",
+                        children=[
+                            html.H3("Access Events", className="card-title"),
+                            html.H4("2,161", className="card-value"),
+                            html.Div("21.01.2025 – 21.01.2025", className="card-subtext"),
+                        ],
+                    ),
+                    html.Div(
+                        id="card-device",
+                        className="stat-card",
+                        children=[
+                            html.H3("Device Analytics", className="card-title"),
+                            html.H4("Total: 4 devices", className="card-value"),
+                            html.Div("Access Granted: 432", className="card-subtext"),
+                        ],
+                    ),
+                    html.Div(
+                        id="card-peak",
+                        className="stat-card",
+                        children=[
+                            html.H3("Peak Activity", className="card-title"),
+                            html.H4("Peak: 9:00", className="card-value"),
+                            html.Div("Busiest: Tuesday", className="card-subtext"),
+                        ],
+                    ),
+                ],
+            )
+        ],
+    )
+
+
+def advanced_layout():
+    return html.Div(
+        id="advanced-content",
+        children=[
+            html.Div(
+                id="stats-panels-container",
+                children=[
+                    html.Div(
+                        id="card-traffic",
+                        className="stat-card",
+                        children=[
+                            html.H3("Traffic Pattern", className="card-title"),
+                            dcc.Graph(id="graph-traffic"),
+                        ],
+                    ),
+                    html.Div(
+                        id="card-security-score",
+                        className="stat-card",
+                        children=[
+                            html.H3("Security Score", className="card-title"),
+                            dcc.Graph(id="graph-security-score"),
+                        ],
+                    ),
+                    html.Div(
+                        id="card-usage",
+                        className="stat-card",
+                        children=[
+                            html.H3("Usage Efficiency", className="card-title"),
+                            dcc.Graph(id="graph-usage"),
+                        ],
+                    ),
+                    html.Div(
+                        id="card-anomaly",
+                        className="stat-card",
+                        children=[
+                            html.H3("Anomaly Detection", className="card-title"),
+                            dcc.Graph(id="graph-anomaly"),
+                        ],
+                    ),
+                ],
+            )
+        ],
+    )
+
+
+def export_layout():
+    return html.Div(
+        id="export-content",
+        children=[
+            html.Div(
+                id="export-buttons",
+                children=[
+                    html.Button("\ud83d\udcca Export Stats CSV", id="export-csv", className="dash-button"),
+                    html.Button("\ud83d\udcc9 Download Charts", id="download-charts", className="dash-button"),
+                    html.Button("\ud83e\uddfe Generate Report", id="generate-report", className="dash-button"),
+                    html.Button("\ud83d\udd04 Refresh Data", id="refresh-data", className="dash-button"),
+                ],
+            )
+        ],
+    )
+
+
+def create_main_layout(app_instance: Dash) -> html.Div:
+    return html.Div(
+        id="app-container",
+        children=[
+            # ─────── Dashboard Header ───────
+            html.Div(
+                id="dashboard-header",
+                children=[
+                    html.Div(
+                        children=[
+                            html.Img(src=app_instance.get_asset_url("logo.png"), style={"height": "40px"}),
+                            html.Span(" Enhanced Analytics Dashboard", style={"fontSize": "24px", "fontWeight": "700", "marginLeft": "10px"}),
                         ],
                         style={"display": "flex", "alignItems": "center"},
                     ),
-                    html.Button("Advanced View \u23f7", id="advanced-view-button"),
+                    html.Button("Advanced View \u23F7", id="advanced-view-button", n_clicks=0),
                 ],
             ),
+
+            # ─────── Top Row: Upload + Chart Controls ───────
             html.Div(
-                style={"display": "flex", "gap": "20px"},
+                id="top-row",
                 children=[
                     html.Div(
                         id="upload-section",
+                        className="card",
                         children=[
-                            dcc.Upload(
-                                id="upload-data",
+                            html.Div(
                                 className="upload-box",
                                 children=[
-                                    html.P("Drop CSV or JSON file here"),
-                                    html.Img(
-                                        src=app_instance.get_asset_url("upload_file_csv_icon.png"),
-                                        style={"height": "60px", "marginTop": "10px"},
-                                    ),
+                                    html.I(className="fa fa-upload fa-2x", style={"marginBottom": "10px", "color": "var(--color-text-secondary)"}),
+                                    html.Div("Drop your CSV or JSON file here", style={"fontSize": "18px", "fontWeight": "500", "marginBottom": "5px"}),
+                                    html.Div("or click to browse", style={"fontSize": "14px", "color": "var(--color-text-tertiary)"}),
+
                                 ],
                             )
                         ],
                     ),
                     html.Div(
                         id="chart-controls",
+
+                        className="card",
                         children=[
+                            html.Div("Chart Type:", style={"fontWeight": "600", "marginBottom": "5px"}),
                             dcc.Dropdown(
-                                id="chart-type",
-                                options=[{"label": "Hourly Activity", "value": "hourly"}],
+                                id="chart-type-dropdown",
+                                options=[
+                                    {"label": "Hourly Activity", "value": "hourly"},
+                                    {"label": "Daily Trends", "value": "daily"},
+                                    {"label": "Device Summary", "value": "device"},
+                                ],
                                 value="hourly",
+                                clearable=False,
+                                style={"marginBottom": "15px"},
                             ),
-                            html.Button("\ud83d\udd0d Filter", id="filter-button", className="dash-button"),
-                            html.Button("\ud83d\uddbd Time Range", id="timerange-button", className="dash-button"),
+                            html.Div(
+                                children=[
+                                    html.Button("\ud83d\udd0d Filter", id="filter-button", className="dash-button"),
+                                    html.Button("\ud83d\uddbd Time Range", id="timerange-button", className="dash-button", style={"marginLeft": "10px"}),
+                                ],
+                                style={"display": "flex"},
+                            ),
                         ],
                     ),
                 ],
+                style={"display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(320px, 1fr))", "gap": "20px", "padding": "0 20px"},
             ),
+
+            # ─────── Tabs ───────
             html.Div(
                 id="tabs-container",
                 children=[
-                    html.Div("Overview", className="tab active", id="tab-overview"),
-                    html.Div("Advanced", className="tab", id="tab-advanced"),
-                    html.Div("Export", className="tab", id="tab-export"),
+                    html.Div("Overview", id="tab-overview", className="tab active"),
+                    html.Div("Advanced", id="tab-advanced", className="tab"),
+                    html.Div("Export", id="tab-export", className="tab"),
                 ],
             ),
-            html.Div(id="tab-content", children=overview_content()),
+
+            # ─────── Tab Content (filled by callback) ───────
+            html.Div(id="tab-content"),
         ],
     )
 
 
-def register_callbacks(app_instance: dash.Dash):
+def register_callbacks(app_instance: Dash):
+    @app_instance.callback(
+        Output("tab-content", "children"),
+        [
+            Input("tab-overview", "n_clicks_timestamp"),
+            Input("tab-advanced", "n_clicks_timestamp"),
+            Input("tab-export", "n_clicks_timestamp"),
+        ],
+    )
+    def render_tab_content(ts_overview, ts_advanced, ts_export):
+        timestamps = {
+            "overview": ts_overview or 0,
+            "advanced": ts_advanced or 0,
+            "export": ts_export or 0,
+        }
+        active_tab = max(timestamps, key=timestamps.get)
+        if active_tab == "overview":
+            return overview_layout()
+        elif active_tab == "advanced":
+            return advanced_layout()
+        else:
+            return export_layout()
+
     @app_instance.callback(
         [
             Output("tab-overview", "className"),
             Output("tab-advanced", "className"),
             Output("tab-export", "className"),
-            Output("tab-content", "children"),
         ],
         [
-            Input("tab-overview", "n_clicks"),
-            Input("tab-advanced", "n_clicks"),
-            Input("tab-export", "n_clicks"),
+            Input("tab-overview", "n_clicks_timestamp"),
+            Input("tab-advanced", "n_clicks_timestamp"),
+            Input("tab-export", "n_clicks_timestamp"),
         ],
-        prevent_initial_call=False,
     )
-    def switch_tabs(n_over, n_adv, n_exp):
-        ctx = dash.callback_context
-        tab = "tab-overview"
-        if ctx.triggered:
-            tab = ctx.triggered[0]["prop_id"].split(".")[0]
-        if tab == "tab-advanced":
-            content = advanced_content()
-        elif tab == "tab-export":
-            content = export_content()
-        else:
-            content = overview_content()
-            tab = "tab-overview"
-        return (
-            "tab active" if tab == "tab-overview" else "tab",
-            "tab active" if tab == "tab-advanced" else "tab",
-            "tab active" if tab == "tab-export" else "tab",
-            content,
-        )
+    def update_tab_active(ts_overview, ts_advanced, ts_export):
+        timestamps = {
+            "overview": ts_overview or 0,
+            "advanced": ts_advanced or 0,
+            "export": ts_export or 0,
+        }
+        active = max(timestamps, key=timestamps.get)
+        return [
+            "tab active" if active == "overview" else "tab",
+            "tab active" if active == "advanced" else "tab",
+            "tab active" if active == "export" else "tab",
+        ]
+
 
 
 if __name__ == "__main__":

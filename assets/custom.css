@@ -1,6 +1,4 @@
-/* ---------------------------------------------
-   UPDATED custom.css: Enhanced UI polish
-   --------------------------------------------- */
+
 
 :root {
   /* Base font sizes */
@@ -21,9 +19,11 @@
   --btn-radius: 8px;
 }
 
-/* -----------------------------------------------------------------------------
+
+/* ─────────────────────────────────────────────────────────────────────────────────
    BODY + TYPOGRAPHY
-   ----------------------------------------------------------------------------- */
+   ───────────────────────────────────────────────────────────────────────────────── */
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   font-size: var(--font-size-base);
@@ -38,25 +38,24 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-text-primary);
   margin-bottom: 8px;
   font-weight: 600;
+
 }
 
 h1 { font-size: var(--font-size-xl); }
 h2 { font-size: var(--font-size-lg); }
 h3 { font-size: var(--font-size-md); }
 
-/* -----------------------------------------------------------------------------
-   GRID & CARD STYLING
-   ----------------------------------------------------------------------------- */
+/* ─────────────────────────────────────────────────────────────────────────────────
+   CARD GRID STYLING
+   ───────────────────────────────────────────────────────────────────────────────── */
 #stats-panels-container {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--card-gap);
-  justify-content: space-between;
-  margin: 20px 0;
+  margin: 20px;
 }
 
-#stats-panels-container > div {
-  flex: 1 1 280px; /* minimum 280px, grow */
+.stat-card {
   background-color: var(--color-surface);
   padding: var(--card-padding);
   border-radius: var(--card-radius);
@@ -64,14 +63,29 @@ h3 { font-size: var(--font-size-md); }
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-#stats-panels-container > div:hover {
+.stat-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* -----------------------------------------------------------------------------
+.card-title {
+  font-size: var(--font-size-md);
+  margin-bottom: 10px;
+}
+
+.card-value {
+  font-size: var(--font-size-lg);
+  margin-bottom: 6px;
+}
+
+.card-subtext {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────────
    BUTTON STYLING
-   ----------------------------------------------------------------------------- */
+   ───────────────────────────────────────────────────────────────────────────────── */
 button, .dash-button {
   padding: var(--btn-padding);
   border-radius: var(--btn-radius);
@@ -79,6 +93,9 @@ button, .dash-button {
   font-weight: 500;
   transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
   text-transform: none;
+  background-color: var(--color-accent) !important;
+  color: #ffffff !important;
+  border: none !important;
 }
 
 button:hover, .dash-button:hover {
@@ -87,22 +104,25 @@ button:hover, .dash-button:hover {
   background-color: var(--color-accent-hover) !important;
 }
 
+
 button:active {
   transform: scale(0.98);
 }
 
-/* -----------------------------------------------------------------------------
+
+/* ─────────────────────────────────────────────────────────────────────────────────
    HEADER & UPLOAD SECTION
-   ----------------------------------------------------------------------------- */
-#dashboard-title {
+   ───────────────────────────────────────────────────────────────────────────────── */
+#dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: var(--color-surface);
   padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   border-radius: var(--card-radius);
   box-shadow: var(--card-shadow);
-  margin-bottom: 20px;
+  margin: 20px;
+
 }
 
 #upload-section {
@@ -110,13 +130,14 @@ button:active {
   padding: var(--card-padding);
   border-radius: var(--card-radius);
   box-shadow: var(--card-shadow);
-  margin-bottom: 20px;
+
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
 
-#upload-section .upload-box {
+.upload-box {
+
   border: 2px dashed var(--color-accent);
   border-radius: var(--card-radius);
   padding: 40px;
@@ -126,41 +147,42 @@ button:active {
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-#upload-section .upload-box:hover {
+
+.upload-box:hover {
+
   background-color: rgba(33, 150, 243, 0.05);
   border-color: var(--color-accent-hover);
 }
 
-/* -----------------------------------------------------------------------------
-   CHART CONTROL PANEL
-   ----------------------------------------------------------------------------- */
+
+/* ─────────────────────────────────────────────────────────────────────────────────
+   CHART CONTROLS
+   ───────────────────────────────────────────────────────────────────────────────── */
+
 #chart-controls {
   background-color: var(--color-surface);
   padding: var(--card-padding);
   border-radius: var(--card-radius);
   box-shadow: var(--card-shadow);
-  margin-bottom: 20px;
+
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;
-  align-items: center;
+  margin: 20px;
 }
 
-/* -----------------------------------------------------------------------------
+/* ─────────────────────────────────────────────────────────────────────────────────
    TABS CONTAINER
-   ----------------------------------------------------------------------------- */
+   ───────────────────────────────────────────────────────────────────────────────── */
 #tabs-container {
-  background-color: var(--color-surface);
-  padding: var(--card-padding);
-  border-radius: var(--card-radius);
-  margin-bottom: 20px;
-  box-shadow: var(--card-shadow);
   display: flex;
   gap: 10px;
+  margin: 0 20px 20px 20px;
 }
 
-#tabs-container .tab {
-  padding: 8px 16px;
+.tab {
+  padding: 10px 20px;
+
   cursor: pointer;
   border-radius: var(--btn-radius);
   background-color: var(--color-border);
@@ -169,35 +191,31 @@ button:active {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-#tabs-container .tab.active {
+
+.tab.active {
   background-color: var(--color-accent);
   color: var(--color-text-primary);
 }
 
-/* -----------------------------------------------------------------------------
+/* ─────────────────────────────────────────────────────────────────────────────────
    EXPORT CONTROLS
-   ----------------------------------------------------------------------------- */
+   ───────────────────────────────────────────────────────────────────────────────── */
 #export-buttons {
   display: flex;
   gap: 10px;
-  margin: 20px 0;
+  margin: 20px;
 }
 
-#export-buttons .dash-button {
-  background-color: var(--color-accent);
-  color: white !important;
-}
-
-/* -----------------------------------------------------------------------------
+/* ─────────────────────────────────────────────────────────────────────────────────
    RESPONSIVE ADJUSTMENTS
-   ----------------------------------------------------------------------------- */
+   ───────────────────────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  #stats-panels-container > div {
-    flex: 1 1 100%;
-  }
-  #dashboard-title, #upload-section, #chart-controls, #tabs-container {
+  #dashboard-header, #upload-section, #chart-controls, #tabs-container {
+
     flex-direction: column;
     align-items: stretch;
   }
 }
-/* --- custom.css END --- */
+
+/* === custom.css END === */
+
