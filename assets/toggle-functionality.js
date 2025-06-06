@@ -2,13 +2,10 @@
 
 console.log('🎛️ Radio toggle script loading...');
 
-// Wait for DOM to be ready
+// Now the radio toggle sits inside #facility-setup-card #manual-map-toggle
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ DOM ready, initializing radio toggle fix');
-    initializeRadioToggleFix();
-    
-    // Set up observers for dynamic content
-    setupDynamicContentObserver();
+  initializeRadioToggleFix();
+  setupDynamicContentObserver();
 });
 
 function initializeRadioToggleFix() {
