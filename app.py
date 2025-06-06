@@ -1,3 +1,7 @@
+# app.py - FIXED VERSION - Layout consistency with callback compatibility
+# ============================================================================
+# FIXED: All callback outputs now have corresponding layout elements
+# ============================================================================
 """
 Yōsai Enhanced Analytics Dashboard - FIXED VERSION
 
@@ -35,7 +39,7 @@ from ui.themes.style_config import (
 )
 from config.settings import DEFAULT_ICONS, REQUIRED_INTERNAL_COLUMNS
 
-print("\ud83d\ude80 Starting Y\u014dsai Enhanced Analytics Dashboard (FIXED VERSION)...")
+print("🚀 Starting Yōsai Enhanced Analytics Dashboard (FIXED VERSION)...")
 
 # ============================================================================
 # ENHANCED IMPORTS WITH FALLBACK SUPPORT
@@ -49,61 +53,61 @@ components_available = {
 
 component_instances = {}
 
-print("\ud83d\udd0d Detecting available components...")
+print("🔍 Detecting available components...")
 
 # Enhanced stats component
 try:
     from ui.components.stats import create_enhanced_stats_component, EnhancedStatsComponent
     components_available['enhanced_stats'] = True
     component_instances['enhanced_stats'] = create_enhanced_stats_component()
-    print("\u2705 Enhanced stats component imported and instantiated")
+    print(">> Enhanced stats component imported and instantiated")
 except ImportError as e:
-    print(f"\u26a0\ufe0f Enhanced stats component not available: {e}")
+    print(f"!! Enhanced stats component not available: {e}")
     component_instances['enhanced_stats'] = None
 
 # Upload component
 try:
     from ui.components.upload import create_enhanced_upload_component
     components_available['upload'] = True
-    print("\u2705 Upload component imported")
+    print(">> Upload component imported")
 except ImportError as e:
-    print(f"\u26a0\ufe0f Upload component not available: {e}")
+    print(f"!! Upload component not available: {e}")
     create_enhanced_upload_component = None
 
 # Mapping component
 try:
     from ui.components.mapping import create_mapping_component
     components_available['mapping'] = True
-    print("\u2705 Mapping component imported")
+    print(">> Mapping component imported")
 except ImportError as e:
-    print(f"\u26a0\ufe0f Mapping component not available: {e}")
+    print(f"!! Mapping component not available: {e}")
     create_mapping_component = None
 
 # Classification component
 try:
     from ui.components.classification import create_classification_component
     components_available['classification'] = True
-    print("\u2705 Classification component imported")
+    print(">> Classification component imported")
 except ImportError as e:
-    print(f"\u26a0\ufe0f Classification component not available: {e}")
+    print(f"!! Classification component not available: {e}")
     create_classification_component = None
 
 # Cytoscape for graphs
 try:
     import dash_cytoscape as cyto
     components_available['cytoscape'] = True
-    print("\u2705 Cytoscape available")
+    print(">> Cytoscape available")
 except ImportError as e:
-    print(f"\u26a0\ufe0f Cytoscape not available: {e}")
+    print(f"!! Cytoscape not available: {e}")
 
 # Plotly for charts
 try:
     import plotly.express as px
     import plotly.graph_objects as go
     components_available['plotly'] = True
-    print("\u2705 Plotly available")
+    print(">> Plotly available")
 except ImportError as e:
-    print(f"\u26a0\ufe0f Plotly not available: {e}")
+    print(f"!! Plotly not available: {e}")
     px = None
     go = None
 
@@ -111,14 +115,14 @@ except ImportError as e:
 try:
     from ui.pages.main_page import create_main_layout
     components_available['main_layout'] = True
-    print("\u2705 Main layout imported")
+    print(">> Main layout imported")
 except ImportError as e:
-    print(f"\u26a0\ufe0f Main layout not available: {e}")
+    print(f"!! Main layout not available: {e}")
     create_main_layout = None
 
-print(f"\ud83c\udf1f Component Detection Complete:")
+print(f">> Component Detection Complete:")
 for component, available in components_available.items():
-    status = "\u2705 ACTIVE" if available else "\u274c FALLBACK"
+    status = "[ACTIVE]" if available else "[FALLBACK]"
     print(f"   {component}: {status}")
 
 # ============================================================================
@@ -128,16 +132,16 @@ for component, available in components_available.items():
 def create_fixed_layout_with_required_elements(app_instance, main_logo_path, icon_upload_default):
     """Create layout that maintains current design but includes all required callback elements"""
     
-    print("\ud83c\udfa8 Creating FIXED layout with all required elements...")
+    print(">> Creating FIXED layout with all required elements...")
     
     # First try to use the main layout if available
     base_layout = None
     if components_available['main_layout'] and create_main_layout:
         try:
             base_layout = create_main_layout(app_instance)
-            print("\u2705 Base main layout loaded successfully")
+            print(">> Base main layout loaded successfully")
         except Exception as e:
-            print(f"\u26a0\ufe0f Error loading main layout: {e}")
+            print(f"!! Error loading main layout: {e}")
             base_layout = None
     
     if base_layout:
@@ -168,11 +172,11 @@ def _add_missing_elements_to_existing_layout(base_layout, main_logo_path, icon_u
         for child in base_children:
             collect_ids(child)
         
-        print(f"\ud83d\udd0d Found existing IDs: {len(existing_ids)} total")
+        print(f">> Found existing IDs: {len(existing_ids)} total")
         
         # FIXED: Add yosai-custom-header if dashboard-title exists but yosai-custom-header doesn't
         if 'dashboard-title' in existing_ids and 'yosai-custom-header' not in existing_ids:
-            print("\ud83d\udd27 Adding yosai-custom-header alias for dashboard-title")
+            print(">> Adding yosai-custom-header alias for dashboard-title")
             # Add yosai-custom-header as a hidden element that mirrors dashboard-title styling
             base_children.insert(0, html.Div(
                 id='yosai-custom-header',
@@ -220,7 +224,7 @@ def _add_missing_elements_to_existing_layout(base_layout, main_logo_path, icon_u
                             break
                     
                     if not has_dropdown_area:
-                        print("\ud83d\udd27 Adding missing dropdown-mapping-area to mapping-ui-section")
+                        print(">> Adding missing dropdown-mapping-area to mapping-ui-section")
                         # Add the missing dropdown-mapping-area
                         section_children.extend([
                             html.H4("Step 1: Map CSV Headers", style={
@@ -289,13 +293,13 @@ def _add_missing_elements_to_existing_layout(base_layout, main_logo_path, icon_u
         # Add missing required elements (hidden by default to maintain layout)
         for element_id, element_creator in required_elements.items():
             if element_id not in existing_ids and element_creator:
-                print(f"\ud83d\udd27 Adding missing element: {element_id}")
+                print(f">> Adding missing element: {element_id}")
                 base_children.append(element_creator)
         
         # FIXED: Ensure all required callback target elements exist
         _add_missing_callback_elements(base_children, existing_ids)
         
-        print("\u2705 Successfully added all missing elements to existing layout")
+        print(">> Successfully added all missing elements to existing layout")
         
         return html.Div(
             base_children,
@@ -307,7 +311,7 @@ def _add_missing_elements_to_existing_layout(base_layout, main_logo_path, icon_u
         )
         
     except Exception as e:
-        print(f"\u274c Error adding missing elements: {e}")
+        print(f"!! Error adding missing elements: {e}")
         traceback.print_exc()
         return _create_complete_fixed_layout(None, main_logo_path, icon_upload_default)
 
@@ -334,7 +338,7 @@ def _add_missing_callback_elements(base_children, existing_ids):
     # Add missing elements as hidden placeholders
     for element_id in required_callback_ids:
         if element_id not in existing_ids:
-            print(f"\ud83d\udd27 Adding hidden placeholder for callback target: {element_id}")
+            print(f">> Adding hidden placeholder for callback target: {element_id}")
             
             # Create appropriate element type based on ID
             if 'chart' in element_id:
@@ -359,7 +363,7 @@ def _add_missing_callback_elements(base_children, existing_ids):
 def _create_complete_fixed_layout(app_instance, main_logo_path, icon_upload_default):
     """Create complete layout from scratch with all required elements"""
     
-    print("\ud83d\udd27 Creating complete layout from scratch with all required elements")
+    print(">> Creating complete layout from scratch with all required elements")
     
     return html.Div([
         # FIXED: yosai-custom-header (required by callbacks)
@@ -394,7 +398,7 @@ def _create_complete_fixed_layout(app_instance, main_logo_path, icon_upload_defa
             id="dashboard-title",
             className="header-section",
             children=[
-                html.H1("Y\u014dsai Intel Dashboard", className="main-title"),
+                html.H1("Yōsai Intel Dashboard", className="main-title"),
                 html.Button(
                     "Advanced View",
                     id="advanced-view-button",
@@ -704,12 +708,12 @@ app = dash.Dash(
     external_stylesheets=[dbc.themes.DARKLY],
     meta_tags=[
         {"name": "viewport", "content": "width=device-width, initial-scale=1"},
-        {"name": "description", "content": "Y\u014dsai Enhanced Analytics Dashboard - FIXED VERSION"}
+        {"name": "description", "content": "Yōsai Enhanced Analytics Dashboard - FIXED VERSION"}
     ]
 )
 
 server = app.server
-app.title = "Y\u014dsai Enhanced Analytics Dashboard"
+app.title = "Yōsai Enhanced Analytics Dashboard"
 
 # Asset paths
 ICON_UPLOAD_DEFAULT = app.get_asset_url('upload_file_csv_icon.png')
@@ -717,12 +721,12 @@ ICON_UPLOAD_SUCCESS = app.get_asset_url('upload_file_csv_icon_success.png')
 ICON_UPLOAD_FAIL = app.get_asset_url('upload_file_csv_icon_fail.png')
 MAIN_LOGO_PATH = app.get_asset_url('logo_white.png')
 
-print(f"\ud83d\udcc1 Assets loaded: {ICON_UPLOAD_DEFAULT}")
+print(f">> Assets loaded: {ICON_UPLOAD_DEFAULT}")
 
 # FIXED: Create layout with all required elements
 app.layout = create_fixed_layout_with_required_elements(app, MAIN_LOGO_PATH, ICON_UPLOAD_DEFAULT)
 
-print("\u2705 FIXED layout created successfully with all required callback elements")
+print(">> FIXED layout created successfully with all required callback elements")
 
 # ============================================================================
 # FIXED CALLBACKS - All outputs now have corresponding layout elements
@@ -746,12 +750,12 @@ print("\u2705 FIXED layout created successfully with all required callback eleme
 )
 def enhanced_file_upload(contents, filename):
     """Enhanced upload callback"""
-    print(f"\ud83d\udd04 Upload callback triggered: {filename}")
+    print(f">> Upload callback triggered: {filename}")
     if not contents:
         return None, None, "", None, {'display': 'none'}, {}, None, ICON_UPLOAD_DEFAULT
     
     try:
-        print(f"\ud83d\udcc4 Processing file: {filename}")
+        print(f">> Processing file: {filename}")
         
         # Decode file
         content_type, content_string = contents.split(',')
@@ -770,7 +774,7 @@ def enhanced_file_upload(contents, filename):
             )
 
         headers = df.columns.tolist()
-        print(f"\u2705 File loaded: {len(df)} rows, {len(headers)} columns")
+        print(f">> File loaded: {len(df)} rows, {len(headers)} columns")
         
         # Extract doors (simple heuristic)
         doors = []
@@ -788,10 +792,10 @@ def enhanced_file_upload(contents, filename):
             'upload_timestamp': pd.Timestamp.now().isoformat(),
         }
         
-        print("\u2705 Upload successful")
+        print(">> Upload successful")
         return (
             contents, headers,
-            f"\u2705 Uploaded: {filename} ({len(df):,} rows, {len(headers)} columns)",
+            f"[SUCCESS] Uploaded: {filename} ({len(df):,} rows, {len(headers)} columns)",
             doors,
             {'display': 'block'},
             {'borderColor': '#2DBE6C'},
@@ -800,10 +804,10 @@ def enhanced_file_upload(contents, filename):
         )
         
     except Exception as e:
-        print(f"\u274c Error in upload: {e}")
+        print(f"!! Error in upload: {e}")
         return (
             None, None,
-            f"\u274c Error processing {filename}: {str(e)}",
+            f"[ERROR] Error processing {filename}: {str(e)}",
             None, {'display': 'none'}, {}, None, ICON_UPLOAD_FAIL
         )
 
@@ -819,7 +823,7 @@ def enhanced_file_upload(contents, filename):
 )
 def create_mapping_dropdowns(headers):
     """Create mapping dropdowns when CSV is uploaded"""
-    print(f"\ud83d\uddfa\ufe0f Mapping callback triggered with headers: {headers}")
+    print(f">> Mapping callback triggered with headers: {headers}")
     
     if not headers:
         return [], {'display': 'none'}, {'display': 'none'}
@@ -858,11 +862,11 @@ def create_mapping_dropdowns(headers):
             'margin': '20px auto'
         }
         
-        print(f"\u2705 Created {len(dropdowns)} mapping controls")
+        print(f">> Created {len(dropdowns)} mapping controls")
         return dropdowns, button_style, section_style
         
     except Exception as e:
-        print(f"\u274c Error creating mapping: {e}")
+        print(f"!! Error creating mapping: {e}")
         return [], {'display': 'none'}, {'display': 'none'}
 
 # 3. Mapping confirmation callback
@@ -896,17 +900,17 @@ def confirm_mapping(n_clicks, values, ids):
             return (
                 {'display': 'none'}, 
                 {'display': 'block'}, 
-                f"\u26a0\ufe0f Please map all required columns. Missing: {', '.join(missing_fields[:2])}"
+                f"⚠️ Please map all required columns. Missing: {', '.join(missing_fields[:2])}"
             )
         
         return (
             {'display': 'block'},
             {'display': 'none'},
-            "\u2705 Column mapping completed! Configure facility settings below."
+            "✅ Column mapping completed! Configure facility settings below."
         )
         
     except Exception as e:
-        return {'display': 'none'}, {'display': 'block'}, f"\u274c Error: {str(e)}"
+        return {'display': 'none'}, {'display': 'block'}, f"❌ Error: {str(e)}"
 
 # 4. Classification toggle callback
 @app.callback(
@@ -1020,7 +1024,7 @@ def generate_comprehensive_analysis(n_clicks, file_data, processed_data, headers
         )
     
     try:
-        print("\ud83c\udf89 Generating comprehensive analysis...")
+        print("🎉 Generating comprehensive analysis...")
         
         # Show all sections
         show_style = {'display': 'block'}
@@ -1044,7 +1048,7 @@ def generate_comprehensive_analysis(n_clicks, file_data, processed_data, headers
                 
                 if column_mapping:
                     df = df.rename(columns=column_mapping)
-                    print(f"\u2705 Applied column mapping: {column_mapping}")
+                    print(f"✅ Applied column mapping: {column_mapping}")
             
             # Calculate metrics
             total_events = len(df)
@@ -1144,12 +1148,12 @@ def generate_comprehensive_analysis(n_clicks, file_data, processed_data, headers
         
         # Security breakdown
         security_breakdown = [
-            html.P("\ud83d\udfe2 Green: 12 devices", style={'color': COLORS['success']}),
-            html.P("\ud83d\udfe1 Yellow: 8 devices", style={'color': COLORS['warning']}),
-            html.P("\ud83d\udd34 Red: 3 devices", style={'color': COLORS['critical']}),
+            html.P("🟢 Green: 12 devices", style={'color': COLORS['success']}),
+            html.P("🟡 Yellow: 8 devices", style={'color': COLORS['warning']}),
+            html.P("🔴 Red: 3 devices", style={'color': COLORS['critical']}),
         ]
         
-        print("\u2705 Analysis completed successfully")
+        print("✅ Analysis completed successfully")
         
         return (
             show_style,  # yosai-custom-header
@@ -1158,7 +1162,7 @@ def generate_comprehensive_analysis(n_clicks, file_data, processed_data, headers
             enhanced_metrics['date_range'],  # date range
             device_table,  # device table
             graph_elements, graph_elements,  # graph elements
-            "\ud83c\udf89 Analysis complete! Explore your comprehensive dashboard.",  # status
+            "🎉 Analysis complete! Explore your comprehensive dashboard.",  # status
             f"Users: {enhanced_metrics['unique_users']:,}",  # users
             f"Avg: {enhanced_metrics['total_events']/enhanced_metrics['unique_users']:.1f} events/user",
             f"Top: USER_045 ({enhanced_metrics['total_events']//enhanced_metrics['unique_users'] + 45} events)",
@@ -1176,7 +1180,7 @@ def generate_comprehensive_analysis(n_clicks, file_data, processed_data, headers
         )
         
     except Exception as e:
-        print(f"\u274c Error in analysis: {e}")
+        print(f"❌ Error in analysis: {e}")
         traceback.print_exc()
         
         # Return error state
@@ -1195,7 +1199,7 @@ def generate_comprehensive_analysis(n_clicks, file_data, processed_data, headers
         return (
             show_style,  # header
             hide_style, hide_style, hide_style, hide_style, hide_style, hide_style,  # sections
-            'Error', 'Error', [], [], [], f"\u274c Analysis Error: {str(e)}",  # basic
+            'Error', 'Error', [], [], [], f"❌ Analysis Error: {str(e)}",  # basic
             'Error', 'Error', 'Error', 'Error', 'Error',  # enhanced stats
             'Error', 'Error', 'Error',  # device stats
             'Error', 'Error', 'Error', 'Error',  # insights
@@ -1226,13 +1230,13 @@ def handle_export_actions(csv_clicks, png_clicks, pdf_clicks, refresh_clicks):
     button_id = ctx.triggered[0]['prop_id'].split('.')[0]
     
     if button_id == 'export-stats-csv':
-        return "\ud83d\udcca CSV export completed!"
+        return "📊 CSV export completed!"
     elif button_id == 'export-charts-png':
-        return "\ud83d\udcc8 Charts exported as PNG!"
+        return "📈 Charts exported as PNG!"
     elif button_id == 'generate-pdf-report':
-        return "\ud83d\udcc4 PDF report generated!"
+        return "📄 PDF report generated!"
     elif button_id == 'refresh-analytics':
-        return "\ud83d\udd04 Analytics data refreshed!"
+        return "🔄 Analytics data refreshed!"
     
     return ""
 
@@ -1254,26 +1258,26 @@ def display_node_data(data):
         details = [f"Selected: {node_name}"]
         
         if device_type == 'entrance':
-            details.append("\ud83d\udeaa Entrance/Exit Point")
+            details.append("🚪 Entrance/Exit Point")
         else:
-            details.append("\ud83d\udcf1 Access Point")
+            details.append("📱 Access Point")
         
         return " | ".join(details)
         
     except Exception as e:
         return f"Node information unavailable: {str(e)}"
 
-print("\u2705 FIXED callback registration complete - all outputs have corresponding layout elements")
+print("✅ FIXED callback registration complete - all outputs have corresponding layout elements")
 
 if __name__ == "__main__":
-    print("\n\ud83d\ude80 Starting FIXED Enhanced Analytics Dashboard...")
-    print("\ud83c\udf10 Dashboard will be available at: http://127.0.0.1:8050")
-    print("\n\u2705 FIXES APPLIED:")
-    print("   \u2022 Added missing yosai-custom-header element")
-    print("   \u2022 Added missing dropdown-mapping-area element") 
-    print("   \u2022 All callback outputs now have corresponding layout elements")
-    print("   \u2022 Maintained existing layout consistency")
-    print("   \u2022 Preserved current design and styling")
+    print("\n🚀 Starting FIXED Enhanced Analytics Dashboard...")
+    print("🌐 Dashboard will be available at: http://127.0.0.1:8050")
+    print("\n✅ FIXES APPLIED:")
+    print("   • Added missing yosai-custom-header element")
+    print("   • Added missing dropdown-mapping-area element") 
+    print("   • All callback outputs now have corresponding layout elements")
+    print("   • Maintained existing layout consistency")
+    print("   • Preserved current design and styling")
     
     try:
         app.run(
@@ -1285,5 +1289,5 @@ if __name__ == "__main__":
             dev_tools_props_check=False
         )
     except Exception as e:
-        print(f"\ud83d\udca5 Failed to start server: {e}")
+        print(f"💥 Failed to start server: {e}")
         traceback.print_exc()
