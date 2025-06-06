@@ -7,6 +7,7 @@ import pandas as pd
 import hashlib
 import tempfile
 import os
+import json
 from typing import Dict, List, Optional, Any
 import re
 import logging
@@ -73,9 +74,9 @@ class SecureFileValidator:
             if self.magic_available and self.magic is not None:
                 try:
                     detected_mime = self.magic.from_buffer(file_content)
-                    allowed_mimes = ['text/csv', 'text/plain', 'application/csv']
+                    allowed_mimes = ['text/csv', 'text/plain', 'application/csv', 'application/json']
                     if detected_mime not in allowed_mimes:
-                        warning_msg = f"Detected MIME type: {detected_mime}. Expected CSV format."
+                        warning_msg = f"Detected MIME type: {detected_mime}. Expected CSV or JSON format."
                         result['warnings'].append(warning_msg)
                         logger.info(f"MIME type warning: {warning_msg}")
                 except Exception as e:
@@ -83,11 +84,15 @@ class SecureFileValidator:
                     result['warnings'].append(warning_msg)
                     logger.warning(warning_msg)
             
-            # 4. Content structure validation
-            csv_validation = self._validate_csv_structure(file_content)
-            if not csv_validation['valid']:
-                result['errors'].extend(csv_validation['errors'])
-                logger.warning(f"CSV structure validation failed: {csv_validation['errors']}")
+            # 4. Content structure validation based on file type
+            if filename.lower().endswith('.csv'):
+                file_validation = self._validate_csv_structure(file_content)
+            else:
+                file_validation = self._validate_json_structure(file_content)
+
+            if not file_validation['valid']:
+                result['errors'].extend(file_validation['errors'])
+                logger.warning(f"File structure validation failed: {file_validation['errors']}")
                 return result
             
             # 5. Malicious pattern detection
@@ -101,8 +106,8 @@ class SecureFileValidator:
             result['valid'] = True
             result['file_info'] = {
                 'size_bytes': len(file_content),
-                'row_count': csv_validation.get('row_count', 0),
-                'column_count': csv_validation.get('column_count', 0),
+                'row_count': file_validation.get('row_count', 0),
+                'column_count': file_validation.get('column_count', 0),
                 'file_hash': hashlib.sha256(file_content).hexdigest()[:16]
             }
             
@@ -165,6 +170,18 @@ class SecureFileValidator:
                     os.unlink(temp_file_path)
                 except OSError as e:
                     logger.warning(f"Could not delete temp file {temp_file_path}: {str(e)}")
+
+    def _validate_json_structure(self, file_content: bytes) -> Dict[str, Any]:
+        """Validate basic JSON structure"""
+        try:
+            decoded = file_content.decode('utf-8', errors='ignore').strip()
+            if not decoded:
+                return {'valid': False, 'errors': ['JSON file is empty']}
+            json.loads(decoded)
+            return {'valid': True}
+        except Exception as e:
+            logger.error(f"JSON parsing error: {str(e)}")
+            return {'valid': False, 'errors': [f'JSON parsing error: {str(e)}']}
     
     def _estimate_csv_rows(self, file_path: str) -> int:
         """Estimate number of rows in CSV file"""
