@@ -15,7 +15,7 @@ from dash import Input, Output, State, html, dcc
 from ui.components.upload import create_upload_component
 from ui.themes.graph_styles import upload_icon_img_style
 
-from ui.themes.style_config import UPLOAD_STYLES, get_interactive_setup_style
+from ui.themes.style_config import UPLOAD_STYLES, MAPPING_STYLES, get_interactive_setup_style
 # Import required column mapping from unified settings
 from config.settings import REQUIRED_INTERNAL_COLUMNS
 
@@ -46,6 +46,7 @@ class UploadHandlers:
                 Output('dropdown-mapping-area', 'children'),
                 Output('confirm-header-map-button', 'style', allow_duplicate=True),
                 Output('interactive-setup-container', 'style'),
+                Output('mapping-ui-section', 'style', allow_duplicate=True),
                 Output('processing-status', 'children', allow_duplicate=True),
                 Output('upload-icon', 'src'),
                 Output('upload-data', 'style'),
@@ -194,6 +195,7 @@ class UploadHandlers:
             None, None, [],  # file store, headers, dropdown area
             confirm_button_style_hidden,  # confirm button style
             hide_style,  # interactive setup container
+            hide_style,  # mapping section style
             "",  # processing status
             self.icon_upload_default,  # upload icon src
             upload_styles['initial'],  # upload box style
@@ -212,12 +214,15 @@ class UploadHandlers:
         
         processing_status_msg = f"Step 1: Confirm Header Mapping for '{filename}'."
         
+        show_mapping_style = MAPPING_STYLES['section']
+
         return (
             result['contents'],  # uploaded file store
             result['headers'],  # csv headers store
             result['mapping_dropdowns'],  # dropdown mapping area
             confirm_button_style_visible,  # confirm button style
             show_interactive_setup_style,  # interactive setup container
+            show_mapping_style,  # mapping section style
             processing_status_msg,  # processing status
             self.icon_upload_success,  # upload icon src
             upload_styles['success'],  # upload box style
@@ -243,6 +248,7 @@ class UploadHandlers:
             [html.P(processing_status_msg, style={'color': 'red'})],  # dropdown area
             confirm_button_style_hidden,  # confirm button style
             show_interactive_setup_style,  # interactive setup container
+            hide_style,  # mapping section style
             processing_status_msg,  # processing status
             self.icon_upload_fail,  # upload icon src
             upload_styles['fail'],  # upload box style
