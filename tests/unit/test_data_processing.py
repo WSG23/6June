@@ -9,8 +9,8 @@ import io
 from unittest.mock import Mock, patch
 
 # FIXED IMPORTS - using your actual project structure
-from data_io.enhanced_csv_loader import EnhancedCSVLoader
-from data_io.secure_file_handler import SecureFileHandler
+from services.csv_loader import load_csv_event_log
+from services.secure_file_handler import SecureFileHandler
 from utils.error_handler import ValidationError, DataProcessingError, FileProcessingError
 from constants import REQUIRED_INTERNAL_COLUMNS
 
@@ -41,17 +41,13 @@ def is_failure_result(result) -> bool:
     return not is_success_result(result)
 
 
-class TestEnhancedCSVLoader:
-    """Test the enhanced CSV loader"""
-    
-    def setup_method(self):
-        """Setup for each test method"""
-        self.loader = EnhancedCSVLoader()
-    
+class TestCSVLoader:
+    """Test the CSV loader service"""
+
     def test_load_valid_csv(self, sample_csv_content, valid_column_mapping):
         """Test loading valid CSV data"""
         csv_io = io.StringIO(sample_csv_content)
-        result = self.loader.load_csv_event_log(csv_io, valid_column_mapping)
+        result = load_csv_event_log(csv_io, valid_column_mapping)
         
        logger.info(f"DEBUG: Result type: {type(result)}")
        logger.info(f"DEBUG: Result: {result}")
@@ -79,7 +75,7 @@ class TestEnhancedCSVLoader:
     def test_load_empty_csv(self):
         """Test handling of empty CSV"""
         csv_io = io.StringIO("")
-        result = self.loader.load_csv_event_log(csv_io, {})
+        result = load_csv_event_log(csv_io, {})
         
         # FIXED: Use helper function for safe boolean checking
         assert result is not None
@@ -93,8 +89,8 @@ class TestEnhancedCSVLoader:
         """Test handling of invalid column mapping"""
         csv_io = io.StringIO(sample_csv_content)
         invalid_mapping = {'NonExistentColumn': 'Timestamp (Event Time)'}  # Fixed display name
-        
-        result = self.loader.load_csv_event_log(csv_io, invalid_mapping)
+
+        result = load_csv_event_log(csv_io, invalid_mapping)
         
         # FIXED: Use helper function for safe boolean checking
         assert result is not None
@@ -108,8 +104,8 @@ class TestEnhancedCSVLoader:
         """Test handling of incomplete column mapping"""
         csv_io = io.StringIO(sample_csv_content)
         incomplete_mapping = {'Timestamp': 'Timestamp (Event Time)'}  # Missing other required columns
-        
-        result = self.loader.load_csv_event_log(csv_io, incomplete_mapping)
+
+        result = load_csv_event_log(csv_io, incomplete_mapping)
         
         # FIXED: Use helper function for safe boolean checking
         assert result is not None
@@ -125,9 +121,9 @@ class TestEnhancedCSVLoader:
 2024-01-01 10:00:00,USER_001,DOOR_001,ACCESS GRANTED
 2024-01-01 11:00:00,USER_002,DOOR_002,ACCESS GRANTED
 invalid_timestamp,USER_003,DOOR_003,ACCESS GRANTED"""
-        
+
         csv_io = io.StringIO(csv_content)
-        result = self.loader.load_csv_event_log(csv_io, valid_column_mapping)
+        result = load_csv_event_log(csv_io, valid_column_mapping)
         
         # FIXED: Use helper function for safe boolean checking
         assert result is not None
@@ -148,9 +144,9 @@ invalid_timestamp,USER_003,DOOR_003,ACCESS GRANTED"""
         csv_content = """Timestamp,UserID,DoorID,EventType
 2024-01-01 10:00:00,USER_001<script>,DOOR_001,ACCESS GRANTED
 2024-01-01 11:00:00,USER_002,DOOR_002,ACCESS GRANTED"""
-        
+
         csv_io = io.StringIO(csv_content)
-        result = self.loader.load_csv_event_log(csv_io, valid_column_mapping)
+        result = load_csv_event_log(csv_io, valid_column_mapping)
         
         # FIXED: Use helper function for safe boolean checking
         assert result is not None
@@ -269,8 +265,7 @@ class TestDataIntegration:
         # FIXED: Use helper function for safe boolean checking
         if is_success_result(file_result):
             # Step 2: Load and validate CSV
-            loader = EnhancedCSVLoader()
-            
+
             # Get the file_io from the result
             if 'file_io' in file_result:
                 csv_io = file_result['file_io']
@@ -279,7 +274,7 @@ class TestDataIntegration:
             else:
                 pytest.skip("File handler returned unexpected format - no file_io or data")
             
-            load_result = loader.load_csv_event_log(csv_io, valid_column_mapping)
+            load_result = load_csv_event_log(csv_io, valid_column_mapping)
             
            logger.info(f"DEBUG: Load result: {load_result}")
             
@@ -308,9 +303,8 @@ class TestDebugHelpers:
     
     def test_debug_loader_return_format(self, sample_csv_content, valid_column_mapping):
         """Debug test to see what the loader actually returns"""
-        loader = EnhancedCSVLoader()
         csv_io = io.StringIO(sample_csv_content)
-        result = loader.load_csv_event_log(csv_io, valid_column_mapping)
+        result = load_csv_event_log(csv_io, valid_column_mapping)
         
        logger.info(f"DEBUG: Loader result type: {type(result)}")
        logger.info(f"DEBUG: Loader result: {result}")
