@@ -778,6 +778,7 @@ def _create_comprehensive_data_stores_v6():
 def _create_enhanced_data_stores_v6():
     """Version 6.0 - Create additional data stores for enhanced features"""
     return html.Div([
+        dcc.Store(id='uploaded-file-store'),
         dcc.Store(id='processed-data-store', storage_type='session'),
         dcc.Store(id='enhanced-metrics-store', storage_type='session'),
     ])
