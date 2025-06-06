@@ -8,7 +8,8 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 
 from ui.themes.style_config import COLORS, MAPPING_STYLES, get_validation_message_style
-from utils.constants import REQUIRED_INTERNAL_COLUMNS
+# Import required column mapping from unified settings
+from config.settings import REQUIRED_INTERNAL_COLUMNS
 
 
 
