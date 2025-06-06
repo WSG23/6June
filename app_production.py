@@ -52,11 +52,7 @@ def create_production_app():
     MAIN_LOGO_PATH = app.get_asset_url('logo_white.png')
     
     # Create main layout
-    app.layout = create_main_layout(
-        app_instance=app,
-        main_logo_path=MAIN_LOGO_PATH,
-        icon_upload_default=ICON_UPLOAD_DEFAULT
-    )
+    app.layout = create_main_layout(app)
     
     # Placeholder for registering callbacks using handler factories
     logger.info("✅ Production app created successfully")

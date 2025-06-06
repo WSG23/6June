@@ -168,7 +168,7 @@ def create_fully_integrated_layout_v6(app_instance, main_logo_path, icon_upload_
     # Use main layout if available, otherwise create comprehensive fallback
     if components_available['main_layout'] and create_main_layout:
         try:
-            base_layout = create_main_layout(app_instance, main_logo_path, icon_upload_default)
+            base_layout = create_main_layout(app_instance)
             enhanced_layout = _integrate_enhanced_features_into_layout_v6(base_layout, main_logo_path)
             print("✅ Enhanced main layout with integrated features")
             return enhanced_layout

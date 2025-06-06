@@ -1,500 +1,267 @@
-# ui/pages/main_page.py - FIXED VERSION - Removes UI Conflicts
+import dash
+from dash import Dash, html, dcc, Input, Output
 
-"""
-Main page layout - STREAMLINED AND CONFLICT-FREE
-All callbacks are handled by unified handler in app.py
-"""
+# Temporary Dash app to get the asset URL for custom.css
+_tmp = Dash(__name__)
+CUSTOM_CSS = _tmp.get_asset_url("custom.css")
 
-from dash import html, dcc
-import dash_cytoscape as cyto
-from ui.components.classification import create_classification_component
-
-from ui.themes.style_config import COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS
-from ui.themes.helpers import (
-    get_button_style,
-    get_card_style,
-    get_card_container_style,
-    get_section_header_style,
-)
-
-# Fallback constants
-REQUIRED_INTERNAL_COLUMNS = {
-    'Timestamp': 'Timestamp (Event Time)',
-    'UserID': 'UserID (Person Identifier)',
-    'DoorID': 'DoorID (Device Name)',
-    'EventType': 'EventType (Access Result)'
-}
+# Main Dash app with external stylesheet
+app = Dash(__name__, external_stylesheets=[CUSTOM_CSS])
 
 
-# Instantiate the reusable classification component for entrance verification
-classification_component = create_classification_component()
-
-def create_main_layout(app_instance, main_logo_path, icon_upload_default):
-    """
-    Creates the main application layout - STREAMLINED VERSION
-    """
-    
-    layout = html.Div(
+def overview_layout():
+    return html.Div(
+        id="overview-content",
         children=[
-            # Main Header Bar
-            create_main_header(main_logo_path),
-
-            # Upload Section - SIMPLIFIED
-            create_upload_section(icon_upload_default),
-
-            # Interactive Setup Container - SIMPLIFIED
-            create_interactive_setup_container(),
-
-            # Processing Status
             html.Div(
-                id='processing-status',
-                style={
-                    'marginTop': SPACING['md'],
-                    'color': COLORS['accent'],
-                    'textAlign': 'center',
-                    'fontSize': TYPOGRAPHY['text_base'],
-                    'fontWeight': TYPOGRAPHY['font_medium']
-                }
-            ),
-
-            # Results Section - HIDDEN until processing
-            create_results_section(),
-
-            # Data Stores
-            create_data_stores(),
-        ],
-        style={
-            'backgroundColor': COLORS['background'],
-            'padding': SPACING['md'],
-            'minHeight': '100vh',
-            'fontFamily': 'Inter, system-ui, sans-serif'
-        }
-    )
-
-    return layout
-
-def create_main_header(main_logo_path):
-    """Creates the main header bar"""
-    header_style = get_card_style()
-    header_style.update({
-        'display': 'flex',
-        'alignItems': 'center',
-        'justifyContent': 'center',
-        'padding': f"{SPACING['md']} {SPACING['xl']}",
-        'marginBottom': SPACING['xl'],
-    })
-    return html.Div(
-        style=header_style,
-        children=[
-            html.Img(src=main_logo_path, style={'height': '40px', 'marginRight': SPACING['base']}),
-            html.H1(
-                "Enhanced Analytics Dashboard",
-                style={
-                    'fontSize': TYPOGRAPHY['text_3xl'],
-                    'margin': '0',
-                    'color': COLORS['text_primary'],
-                    'fontWeight': TYPOGRAPHY['font_semibold']
-                }
-            )
-        ]
-    )
-
-def create_upload_section(icon_upload_default):
-    """Upload section - SIMPLIFIED"""
-    return html.Div([
-        dcc.Upload(
-            id='upload-data',
-            children=html.Div([
-                html.Img(
-                    id='upload-icon',
-                    src=icon_upload_default,
-                    style={
-                        'width': '96px',
-                        'height': '96px',
-                        'marginBottom': SPACING['base'],
-                        'opacity': '0.8'
-                    }
-                ),
-                html.H3(
-                    "Drop your CSV or JSON file here",
-                    style={
-                        'margin': '0',
-                        'fontSize': '1.2rem',
-                        'fontWeight': TYPOGRAPHY['font_semibold'],
-                        'color': COLORS['text_primary'],
-                        'marginBottom': SPACING['xs']
-                    }
-                ),
-                html.P(
-                    "or click to browse",
-                    style={
-                        'margin': '0',
-                        'fontSize': '0.9rem',
-                        'color': COLORS['text_secondary'],
-                    }
-                ),
-            ], style={'textAlign': 'center', 'padding': SPACING['md']}),
-            style={
-                'width': '70%',
-                'maxWidth': '600px',
-                'minHeight': '180px',
-                'borderRadius': BORDER_RADIUS['xl'],
-                'textAlign': 'center',
-                'margin': f"0 auto {SPACING['xl']} auto",
-                'display': 'flex',
-                'alignItems': 'center',
-                'justifyContent': 'center',
-                'cursor': 'pointer',
-                'transition': 'all 0.3s ease',
-                'border': f'2px dashed {COLORS["border"]}',
-                'backgroundColor': COLORS['surface'],
-            },
-            multiple=False,
-            accept='.csv,.json'
-        )
-    ])
-
-def create_interactive_setup_container():
-    """Interactive setup container - SIMPLIFIED"""
-    return html.Div(
-        id='interactive-setup-container',
-        style={'display': 'none'},
-        children=[
-            # Step 1: CSV Header Mapping
-            create_mapping_section(),
-
-            # Step 2 & 3: Entrance Verification Section (facility setup and classification)
-            classification_component.create_entrance_verification_section(),
-
-            # Generate Button
-            html.Button(
-                'Confirm Selections & Generate Analysis',
-                id='confirm-and-generate-button',
-                n_clicks=0,
-                style={
-                    **get_button_style(),
-                    'width': '100%',
-                    'maxWidth': '400px',
-                    'margin': f"{SPACING['xl']} auto",
-                    'display': 'block',
-                    'fontSize': TYPOGRAPHY['text_lg']
-                }
-            )
-        ]
-    )
-
-def create_mapping_section():
-    """Step 1: Map CSV Headers (wrapped in mapping-ui-section for callback control)"""
-    return html.Div(
-        id='mapping-ui-section',  # ✅ Enables callback to toggle visibility
-        style={**get_card_container_style(padding=SPACING['lg'], margin_bottom=SPACING['md']), 'display': 'none'},
-        children=[
-            html.H4(
-                "Step 1: Map CSV Headers",
-                style=get_section_header_style()
-            ),
-            html.P(
-                "Map your CSV columns to the required fields below:",
-                style={
-                    'color': COLORS['text_secondary'],
-                    'fontSize': '0.9rem',
-                    'marginBottom': SPACING['md'],
-                    'textAlign': 'center'
-                }
-            ),
-
-            # Dropdown area
-            html.Div(id='dropdown-mapping-area'),
-
-            # Confirm button
-            html.Button(
-                'Confirm Header Mapping',
-                id='confirm-header-map-button',
-                n_clicks=0,
-                style={
-                    **get_button_style('success'),
-                    'display': 'none',  # Hidden until dropdowns are created
-                    'margin': f"{SPACING['md']} auto"
-                }
-            )
-        ]
-    )
-
-def create_facility_setup():
-    """Step 2: Facility Setup"""
-    return html.Div([
-        html.H4(
-            "Step 2: Facility Setup",
-            style=get_section_header_style()
-        ),
-        
-        # Number of floors
-        html.Div([
-            html.Label(
-                "How many floors are in the facility?",
-                style={
-                    'color': COLORS['text_primary'],
-                    'fontWeight': TYPOGRAPHY['font_semibold'],
-                    'fontSize': '1rem',
-                    'marginBottom': SPACING['sm'],
-                    'display': 'block',
-                    'textAlign': 'center'
-                }
-            ),
-            dcc.Slider(
-                id="num-floors-input",
-                min=1,
-                max=20,
-                step=1,
-                value=4,
-                marks={i: str(i) for i in range(0, 101, 5)},
-                tooltip={"always_visible": False, "placement": "bottom"}
-            ),
-            html.Div(
-                id="num-floors-display",
-                children="4 floors",
-                style={
-                    "fontSize": "0.9rem",
-                    "color": COLORS['text_secondary'],
-                    "marginTop": SPACING['sm'],
-                    "textAlign": "center",
-                    "fontWeight": TYPOGRAPHY['font_semibold']
-                }
-            ),
-        ], style={'marginBottom': SPACING['md']}),
-        
-        # Manual classification toggle
-        html.Div([
-            html.Label(
-                "Enable Manual Door Classification?",
-                style={
-                    'color': COLORS['text_primary'],
-                    'fontWeight': TYPOGRAPHY['font_semibold'],
-                    'fontSize': '1rem',
-                    'marginBottom': SPACING['base'],
-                    'display': 'block',
-                    'textAlign': 'center'
-                }
-            ),
-            dcc.RadioItems(
-                id='manual-map-toggle',
-                options=[
-                    {'label': ' No (Automatic)', 'value': 'no'},
-                    {'label': ' Yes (Manual)', 'value': 'yes'}
-                ],
-                value='no',
-                inline=True,
-                style={'textAlign': 'center'},
-                labelStyle={
-                    'display': 'inline-block',
-                    'marginRight': SPACING['md'],
-                    'padding': f"{SPACING['sm']} {SPACING['lg']}",
-                    'backgroundColor': COLORS['border'],
-                    'color': COLORS['text_secondary'],
-                    'borderRadius': BORDER_RADIUS['full'],
-                    'cursor': 'pointer',
-                    'transition': 'all 0.3s ease'
-                }
-            ),
-        ])
-    ], style=get_card_container_style(padding=SPACING['lg'], margin_bottom=SPACING['md']))
-
-def create_classification_section():
-    """Step 3: Door Classification (conditional)"""
-    return html.Div(
-        id="door-classification-table-container",
-        style={'display': 'none'},
-        children=[
-            html.Div([
-                html.H4(
-                    "Step 3: Door Classification",
-                    style=get_section_header_style()
-                ),
-                html.P(
-                    "Classify each door below:",
-                    style={
-                        'color': COLORS['text_secondary'],
-                        'marginBottom': SPACING['md'],
-                        'textAlign': 'center'
-                    }
-                ),
-                html.Div(id="door-classification-table")
-            ], style=get_card_container_style(padding=SPACING['lg'], margin_bottom=0))
-        ]
-    )
-
-def create_results_section():
-    """Results section - hidden until processing complete"""
-    return html.Div([
-        # Custom Header (hidden)
-        html.Div(
-            id='yosai-custom-header',
-            style={'display': 'none'},
-            children=[
-                html.Div([
-                    html.H2(
-                        "📊 Analysis Results",
-                        style={
-                            'color': COLORS['text_primary'],
-                            'textAlign': 'center',
-                            'margin': '0',
-                            'fontSize': TYPOGRAPHY['text_2xl']
-                        }
-                    )
-                ], style=get_card_container_style(padding=SPACING['lg'], margin_bottom=SPACING['md']))
-            ]
-        ),
-
-        # Statistics Panels (hidden)
-        create_stats_panels(),
-
-        # Graph Container (hidden)
-        create_graph_container(),
-
-        # Analytics Section (initially hidden)
-        html.Div(
-            id='analytics-section',
-            style={'display': 'none'},
-            children=[
-                html.H2("📈 Advanced Analytics", style={'textAlign': 'center'}),
-                html.Div(id='analytics-detailed-breakdown')
-            ]
-        ),
-
-        # Charts Section (hidden until data is ready)
-        html.Div(
-            id='charts-section',
-            style={'display': 'none'},
-            children=[
-                html.H2("📊 Data Visualization", style={'textAlign': 'center'})
-            ]
-        ),
-
-        # Export Section (hidden until data is ready)
-        html.Div(
-            id='export-section',
-            style={'display': 'none'},
-            children=[
-                html.H2("📤 Export & Reports", style={'textAlign': 'center'})
-            ]
-        )
-    ])
-
-
-def create_stats_panels():
-    """Statistics panels"""
-    panel_style = get_card_container_style(padding=SPACING['lg'], margin_bottom=0)
-    panel_style.update({
-        'flex': '1',
-        'margin': f"0 {SPACING['sm']}",
-        'textAlign': 'center',
-        'minWidth': '200px'
-    })
-
-    return html.Div(
-        id='stats-panels-container',
-        style={'display': 'none'},
-        children=[
-            # Access Events Panel
-            html.Div([
-                html.H3("Access Events", style={'color': COLORS['text_primary'], 'marginBottom': SPACING['sm']}),
-                html.H1(id="total-access-events-H1", style={'color': COLORS['accent'], 'margin': f"{SPACING['sm']} 0"}),
-                html.P(id="event-date-range-P", style={'color': COLORS['text_secondary'], 'fontSize': '0.9rem'})
-            ], style=panel_style),
-
-            # Statistics Panel
-            html.Div([
-                html.H3("Summary", style={'color': COLORS['text_primary'], 'marginBottom': SPACING['sm']}),
-                html.P(id="stats-date-range-P", style={'color': COLORS['text_secondary'], 'fontSize': '0.8rem'}),
-                html.P(id="stats-days-with-data-P", style={'color': COLORS['text_secondary'], 'fontSize': '0.8rem'}),
-                html.P(id="stats-num-devices-P", style={'color': COLORS['text_secondary'], 'fontSize': '0.8rem'}),
-                html.P(id="stats-unique-tokens-P", style={'color': COLORS['text_secondary'], 'fontSize': '0.8rem'})
-            ], style=panel_style),
-
-            # Active Devices Panel
-            html.Div([
-                html.H3("Top Devices", style={'color': COLORS['text_primary'], 'marginBottom': SPACING['sm']}),
-                html.Table([
-                    html.Thead(html.Tr([
-                        html.Th("Device", style={'color': COLORS['text_primary'], 'fontSize': '0.8rem'}),
-                        html.Th("Events", style={'color': COLORS['text_primary'], 'fontSize': '0.8rem'})
-                    ])),
-                    html.Tbody(id='most-active-devices-table-body')
-                ], style={'width': '100%', 'fontSize': '0.8rem'})
-            ], style=panel_style)
-        ]
-    )
-
-def create_graph_container():
-    """Graph visualization container"""
-    return html.Div(
-        id='graph-output-container',
-        style={'display': 'none'},
-        children=[
-            html.H2(
-                "🗺️ Facility Layout Model",
-                style={
-                    'textAlign': 'center',
-                    'color': COLORS['text_primary'],
-                    'marginBottom': SPACING['md'],
-                    'fontSize': TYPOGRAPHY['text_2xl']
-                }
-            ),
-            html.Div(
+                id="stats-panels-container",
                 children=[
-                    cyto.Cytoscape(
-                        id='onion-graph',
-                        layout={'name': 'cose', 'fit': True},
-                        style={
-                            'width': '100%',
-                            'height': '500px',
-                            'backgroundColor': COLORS['background'],
-                            'borderRadius': BORDER_RADIUS['lg']
-                        },
-                        elements=[],
-                        stylesheet=[
-                            {
-                                'selector': 'node',
-                                'style': {
-                                    'background-color': COLORS['accent'],
-                                    'label': 'data(label)',
-                                    'color': COLORS['text_on_accent'],
-                                    'text-valign': 'center',
-                                    'width': 40,
-                                    'height': 40
-                                }
-                            },
-                            {
-                                'selector': 'edge',
-                                'style': {
-                                    'line-color': COLORS['border'],
-                                    'width': 2
-                                }
-                            }
-                        ]
-                    )
+                    html.Div(
+                        id="card-access",
+                        className="stat-card",
+                        children=[
+                            html.H3("Access Events", className="card-title"),
+                            html.H4("2,161", className="card-value"),
+                            html.Div("21.01.2025 – 21.01.2025", className="card-subtext"),
+                        ],
+                    ),
+                    html.Div(
+                        id="card-device",
+                        className="stat-card",
+                        children=[
+                            html.H3("Device Analytics", className="card-title"),
+                            html.H4("Total: 4 devices", className="card-value"),
+                            html.Div("Access Granted: 432", className="card-subtext"),
+                        ],
+                    ),
+                    html.Div(
+                        id="card-peak",
+                        className="stat-card",
+                        children=[
+                            html.H3("Peak Activity", className="card-title"),
+                            html.H4("Peak: 9:00", className="card-value"),
+                            html.Div("Busiest: Tuesday", className="card-subtext"),
+                        ],
+                    ),
                 ],
-                style=get_card_container_style(padding=SPACING['lg'], margin_bottom=0)
-            ),
-            html.Pre(
-                id='tap-node-data-output',
-                children="Generate analysis to see the facility layout. Tap nodes for details.",
-                style={**get_card_container_style(padding=SPACING['base'], margin_bottom=0),
-                       'color': COLORS['text_secondary'],
-                       'marginTop': SPACING['md'],
-                       'textAlign': 'center',
-                       'fontSize': '0.9rem'}
             )
-        ]
+        ],
     )
 
-def create_data_stores():
-    """Create all data store components"""
-    return html.Div([
-        dcc.Store(id='uploaded-file-store'),
-        dcc.Store(id='csv-headers-store'),
-        dcc.Store(id='column-mapping-store', storage_type='local'),
-        dcc.Store(id='all-doors-from-csv-store'),
-        dcc.Store(id='manual-door-classifications-store', storage_type='local'),
-        dcc.Store(id='num-floors-store', data=4),
-    ])
+
+def advanced_layout():
+    return html.Div(
+        id="advanced-content",
+        children=[
+            html.Div(
+                id="stats-panels-container",
+                children=[
+                    html.Div(
+                        id="card-traffic",
+                        className="stat-card",
+                        children=[
+                            html.H3("Traffic Pattern", className="card-title"),
+                            dcc.Graph(id="graph-traffic"),
+                        ],
+                    ),
+                    html.Div(
+                        id="card-security-score",
+                        className="stat-card",
+                        children=[
+                            html.H3("Security Score", className="card-title"),
+                            dcc.Graph(id="graph-security-score"),
+                        ],
+                    ),
+                    html.Div(
+                        id="card-usage",
+                        className="stat-card",
+                        children=[
+                            html.H3("Usage Efficiency", className="card-title"),
+                            dcc.Graph(id="graph-usage"),
+                        ],
+                    ),
+                    html.Div(
+                        id="card-anomaly",
+                        className="stat-card",
+                        children=[
+                            html.H3("Anomaly Detection", className="card-title"),
+                            dcc.Graph(id="graph-anomaly"),
+                        ],
+                    ),
+                ],
+            )
+        ],
+    )
+
+
+def export_layout():
+    return html.Div(
+        id="export-content",
+        children=[
+            html.Div(
+                id="export-buttons",
+                children=[
+                    html.Button("\ud83d\udcca Export Stats CSV", id="export-csv", className="dash-button"),
+                    html.Button("\ud83d\udcc9 Download Charts", id="download-charts", className="dash-button"),
+                    html.Button("\ud83e\uddfe Generate Report", id="generate-report", className="dash-button"),
+                    html.Button("\ud83d\udd04 Refresh Data", id="refresh-data", className="dash-button"),
+                ],
+            )
+        ],
+    )
+
+
+def create_main_layout(app_instance: Dash) -> html.Div:
+    return html.Div(
+        id="app-container",
+        children=[
+            # ─────── Dashboard Header ───────
+            html.Div(
+                id="dashboard-header",
+                children=[
+                    html.Div(
+                        children=[
+                            html.Img(src=app_instance.get_asset_url("logo.png"), style={"height": "40px"}),
+                            html.Span(
+                                " Enhanced Analytics Dashboard",
+                                style={"fontSize": "24px", "fontWeight": "700", "marginLeft": "10px"},
+                            ),
+                        ],
+                        style={"display": "flex", "alignItems": "center"},
+                    ),
+                    html.Button("Advanced View \u23f7", id="advanced-view-button", n_clicks=0),
+                ],
+            ),
+            # ─────── Top Row: Upload + Chart Controls ───────
+            html.Div(
+                id="top-row",
+                children=[
+                    html.Div(
+                        id="upload-section",
+                        className="card",
+                        children=[
+                            html.Div(
+                                className="upload-box",
+                                children=[
+                                    html.I(
+                                        className="fa fa-upload fa-2x",
+                                        style={"marginBottom": "10px", "color": "var(--color-text-secondary)"},
+                                    ),
+                                    html.Div(
+                                        "Drop your CSV or JSON file here",
+                                        style={"fontSize": "18px", "fontWeight": "500", "marginBottom": "5px"},
+                                    ),
+                                    html.Div(
+                                        "or click to browse",
+                                        style={"fontSize": "14px", "color": "var(--color-text-tertiary)"},
+                                    ),
+                                ],
+                            )
+                        ],
+                    ),
+                    html.Div(
+                        id="chart-controls",
+                        className="card",
+                        children=[
+                            html.Div("Chart Type:", style={"fontWeight": "600", "marginBottom": "5px"}),
+                            dcc.Dropdown(
+                                id="chart-type-dropdown",
+                                options=[
+                                    {"label": "Hourly Activity", "value": "hourly"},
+                                    {"label": "Daily Trends", "value": "daily"},
+                                    {"label": "Device Summary", "value": "device"},
+                                ],
+                                value="hourly",
+                                clearable=False,
+                                style={"marginBottom": "15px"},
+                            ),
+                            html.Div(
+                                children=[
+                                    html.Button("\ud83d\udd0d Filter", id="filter-button", className="dash-button"),
+                                    html.Button(
+                                        "\ud83d\uddbd Time Range",
+                                        id="timerange-button",
+                                        className="dash-button",
+                                        style={"marginLeft": "10px"},
+                                    ),
+                                ],
+                                style={"display": "flex"},
+                            ),
+                        ],
+                    ),
+                ],
+                style={
+                    "display": "grid",
+                    "gridTemplateColumns": "repeat(auto-fit, minmax(320px, 1fr))",
+                    "gap": "20px",
+                    "padding": "0 20px",
+                },
+            ),
+            # ─────── Tabs ───────
+            html.Div(
+                id="tabs-container",
+                children=[
+                    html.Div("Overview", id="tab-overview", className="tab active"),
+                    html.Div("Advanced", id="tab-advanced", className="tab"),
+                    html.Div("Export", id="tab-export", className="tab"),
+                ],
+            ),
+            # ─────── Tab Content (filled by callback) ───────
+            html.Div(id="tab-content"),
+        ],
+    )
+
+
+def register_callbacks(app_instance: Dash):
+    @app_instance.callback(
+        Output("tab-content", "children"),
+        [
+            Input("tab-overview", "n_clicks_timestamp"),
+            Input("tab-advanced", "n_clicks_timestamp"),
+            Input("tab-export", "n_clicks_timestamp"),
+        ],
+    )
+    def render_tab_content(ts_overview, ts_advanced, ts_export):
+        timestamps = {
+            "overview": ts_overview or 0,
+            "advanced": ts_advanced or 0,
+            "export": ts_export or 0,
+        }
+        active_tab = max(timestamps, key=timestamps.get)
+        if active_tab == "overview":
+            return overview_layout()
+        elif active_tab == "advanced":
+            return advanced_layout()
+        else:
+            return export_layout()
+
+    @app_instance.callback(
+        [
+            Output("tab-overview", "className"),
+            Output("tab-advanced", "className"),
+            Output("tab-export", "className"),
+        ],
+        [
+            Input("tab-overview", "n_clicks_timestamp"),
+            Input("tab-advanced", "n_clicks_timestamp"),
+            Input("tab-export", "n_clicks_timestamp"),
+        ],
+    )
+    def update_tab_active(ts_overview, ts_advanced, ts_export):
+        timestamps = {
+            "overview": ts_overview or 0,
+            "advanced": ts_advanced or 0,
+            "export": ts_export or 0,
+        }
+        active = max(timestamps, key=timestamps.get)
+        return [
+            "tab active" if active == "overview" else "tab",
+            "tab active" if active == "advanced" else "tab",
+            "tab active" if active == "export" else "tab",
+        ]
+
+
+if __name__ == "__main__":
+    app.layout = create_main_layout(app)
+    register_callbacks(app)
+    app.run_server(debug=True)
