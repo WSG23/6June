@@ -127,9 +127,7 @@ def create_main_layout(app_instance: Dash) -> html.Div:
         children=[
             # ─────── Dashboard Header ───────
             html.Div(
-
                 id="dashboard-title",
-
                 children=[
                     html.Div(
                         children=[
@@ -144,26 +142,27 @@ def create_main_layout(app_instance: Dash) -> html.Div:
                         ],
                         style={"display": "flex", "alignItems": "center"},
                     ),
-
                     html.Button("Advanced View ⏷", id="advanced-view-button", n_clicks=0),
                 ],
             ),
-            # ─────── Top Row: Upload + Chart Controls ───────
+
+            # ─────── Upload Section & Chart Controls ───────
             html.Div(
-                id="top-row",
+                id="controls-row",
                 children=[
                     html.Div(
                         id="upload-section",
                         className="card",
-                        children=[
-                            upload_component.create_upload_area(),
-                        ],
+                        children=[upload_component.create_upload_area()],
                     ),
                     html.Div(
                         id="chart-controls",
                         className="card",
                         children=[
-                            html.Div("Chart Type:", style={"fontWeight": "600", "marginBottom": "5px"}),
+                            html.Div(
+                                "Chart Type:",
+                                style={"fontWeight": "600", "marginBottom": "5px"},
+                            ),
                             dcc.Dropdown(
                                 id="chart-type-dropdown",
                                 options=[
@@ -180,7 +179,6 @@ def create_main_layout(app_instance: Dash) -> html.Div:
                                     html.Button("🔍 Filter", id="filter-button", className="dash-button"),
                                     html.Button(
                                         "🧭 Time Range",
-
                                         id="timerange-button",
                                         className="dash-button",
                                         style={"marginLeft": "10px"},
