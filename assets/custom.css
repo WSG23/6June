@@ -1,3 +1,5 @@
+
+
 :root {
   /* Base font sizes */
   --font-size-base: 16px;
@@ -17,9 +19,11 @@
   --btn-radius: 8px;
 }
 
+
 /* ─────────────────────────────────────────────────────────────────────────────────
    BODY + TYPOGRAPHY
    ───────────────────────────────────────────────────────────────────────────────── */
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   font-size: var(--font-size-base);
@@ -34,6 +38,7 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-text-primary);
   margin-bottom: 8px;
   font-weight: 600;
+
 }
 
 h1 { font-size: var(--font-size-xl); }
@@ -99,9 +104,11 @@ button:hover, .dash-button:hover {
   background-color: var(--color-accent-hover) !important;
 }
 
+
 button:active {
   transform: scale(0.98);
 }
+
 
 /* ─────────────────────────────────────────────────────────────────────────────────
    HEADER & UPLOAD SECTION
@@ -115,6 +122,7 @@ button:active {
   border-radius: var(--card-radius);
   box-shadow: var(--card-shadow);
   margin: 20px;
+
 }
 
 #upload-section {
@@ -122,12 +130,14 @@ button:active {
   padding: var(--card-padding);
   border-radius: var(--card-radius);
   box-shadow: var(--card-shadow);
+
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .upload-box {
+
   border: 2px dashed var(--color-accent);
   border-radius: var(--card-radius);
   padding: 40px;
@@ -137,19 +147,24 @@ button:active {
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+
 .upload-box:hover {
+
   background-color: rgba(33, 150, 243, 0.05);
   border-color: var(--color-accent-hover);
 }
 
+
 /* ─────────────────────────────────────────────────────────────────────────────────
    CHART CONTROLS
    ───────────────────────────────────────────────────────────────────────────────── */
+
 #chart-controls {
   background-color: var(--color-surface);
   padding: var(--card-padding);
   border-radius: var(--card-radius);
   box-shadow: var(--card-shadow);
+
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -167,6 +182,7 @@ button:active {
 
 .tab {
   padding: 10px 20px;
+
   cursor: pointer;
   border-radius: var(--btn-radius);
   background-color: var(--color-border);
@@ -174,6 +190,7 @@ button:active {
   font-weight: 500;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+
 
 .tab.active {
   background-color: var(--color-accent);
@@ -194,8 +211,11 @@ button:active {
    ───────────────────────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   #dashboard-header, #upload-section, #chart-controls, #tabs-container {
+
     flex-direction: column;
     align-items: stretch;
   }
 }
+
 /* === custom.css END === */
+
