@@ -211,14 +211,14 @@ class UploadHandlers:
         confirm_button_style_visible = UPLOAD_STYLES['generate_button']
         
         processing_status_msg = f"Step 1: Confirm Header Mapping for '{filename}'."
-        
+
         return (
-            result['contents'],  # uploaded file store
-            result['headers'],  # csv headers store
+            result['contents'],      # uploaded file store
+            result['headers'],       # csv headers store
             result['mapping_dropdowns'],  # dropdown mapping area
-            confirm_button_style_visible,  # confirm button style
-            show_interactive_setup_style,  # interactive setup container
-            processing_status_msg,  # processing status
+            confirm_button_style_visible,
+            show_interactive_setup_style,
+            processing_status_msg,
             self.icon_upload_success,  # upload icon src
             upload_styles['success'],  # upload box style
             hide_style, hide_style, hide_style, hide_style,  # various containers
