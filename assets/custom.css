@@ -121,6 +121,12 @@ button:active {
 
 }
 
+.brand-title {
+  margin-left: 10px;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
 #upload-section {
   background-color: var(--color-surface);
   padding: var(--card-padding);
