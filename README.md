@@ -121,7 +121,9 @@ ui/
 
 ## Running Tests
 
-Install the development requirements before running the test suite:
+Install the development requirements before running the test suite.
+Remember to run `pip install -r requirements-dev.txt` before executing
+`pytest`.
 
 ```bash
 pip install -r requirements-dev.txt
