@@ -65,7 +65,8 @@ def advanced_layout():
                         ],
                     ),
                     html.Div(
-                        id="card-security-score",
+
+                        id="card-security",
                         className="stat-card",
                         children=[
                             html.H3("Security Score", className="card-title"),
@@ -101,10 +102,12 @@ def export_layout():
             html.Div(
                 id="export-buttons",
                 children=[
-                    html.Button("\ud83d\udcca Export Stats CSV", id="export-csv", className="dash-button"),
-                    html.Button("\ud83d\udcc9 Download Charts", id="download-charts", className="dash-button"),
-                    html.Button("\ud83e\uddfe Generate Report", id="generate-report", className="dash-button"),
-                    html.Button("\ud83d\udd04 Refresh Data", id="refresh-data", className="dash-button"),
+
+                    html.Button("📊 Export Stats CSV", id="export-csv", className="dash-button"),
+                    html.Button("📉 Download Charts", id="download-charts", className="dash-button"),
+                    html.Button("🧾 Generate Report", id="generate-report", className="dash-button"),
+                    html.Button("🔄 Refresh Data", id="refresh-data", className="dash-button"),
+
                 ],
             )
         ],
@@ -117,19 +120,24 @@ def create_main_layout(app_instance: Dash) -> html.Div:
         children=[
             # ─────── Dashboard Header ───────
             html.Div(
-                id="dashboard-header",
+
+                id="dashboard-title",
+
                 children=[
                     html.Div(
                         children=[
                             html.Img(src=app_instance.get_asset_url("logo.png"), style={"height": "40px"}),
-                            html.Span(
+
+                            html.H1(
                                 " Enhanced Analytics Dashboard",
-                                style={"fontSize": "24px", "fontWeight": "700", "marginLeft": "10px"},
+                                className="ml-2",
+
                             ),
                         ],
                         style={"display": "flex", "alignItems": "center"},
                     ),
-                    html.Button("Advanced View \u23f7", id="advanced-view-button", n_clicks=0),
+
+                    html.Button("Advanced View ⏷", id="advanced-view-button", n_clicks=0),
                 ],
             ),
             # ─────── Top Row: Upload + Chart Controls ───────
@@ -177,9 +185,10 @@ def create_main_layout(app_instance: Dash) -> html.Div:
                             ),
                             html.Div(
                                 children=[
-                                    html.Button("\ud83d\udd0d Filter", id="filter-button", className="dash-button"),
+                                    html.Button("🔍 Filter", id="filter-button", className="dash-button"),
                                     html.Button(
-                                        "\ud83d\uddbd Time Range",
+                                        "🧭 Time Range",
+
                                         id="timerange-button",
                                         className="dash-button",
                                         style={"marginLeft": "10px"},
