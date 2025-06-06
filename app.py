@@ -848,14 +848,17 @@ def enhanced_file_upload_with_processing_v6(contents, filename):
         content_type, content_string = contents.split(',')
         decoded = base64.b64decode(content_string)
         
-        if not filename.lower().endswith('.csv'):
-            print("❌ Not a CSV file")
-            return None, None, "Error: Please upload a CSV file", None, {'display': 'none'}, {}, None
-        
-        # Read and process CSV
-        df = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
+        # Determine file type and load accordingly
+        if filename.lower().endswith('.csv'):
+            df = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
+        elif filename.lower().endswith('.json'):
+            df = pd.read_json(io.StringIO(decoded.decode('utf-8')))
+        else:
+            print("❌ Unsupported file type")
+            return None, None, "Error: Please upload a CSV or JSON file", None, {'display': 'none'}, {}, None
+
         headers = df.columns.tolist()
-        print(f"✅ CSV loaded: {len(df)} rows, {len(headers)} columns")
+        print(f"✅ File loaded: {len(df)} rows, {len(headers)} columns")
         print(f"📋 Headers: {headers}")
         
         # Enhanced door extraction with better logic
