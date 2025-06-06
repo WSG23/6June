@@ -59,40 +59,38 @@ class EnhancedStatsComponent:
             [
                 # Custom header (same as original)
                 self.create_custom_header(),
-                # Row 1: Access, User and Device analytics with sidebar
+                # Row 1: Core analytics panels
                 html.Div(
-                    id="core-row-with-sidebar",
+                    id="top-analytics-row",
                     style={
                         "display": "flex",
                         "width": "90%",
                         "margin": "0 auto 30px auto",
+                        "gap": "20px",
+                        "justifyContent": "space-between",
+                        "flexWrap": "nowrap",
                     },
                     children=[
-                        html.Div(
-                            id="row1-main-panels",
-                            style={
-                                "display": "flex",
-                                "flex": "1",
-                                "justifyContent": "space-around",
-                            },
-                            children=[
-                                self.create_enhanced_access_events_panel(),
-                                self.create_user_patterns_panel(),
-                                self.create_enhanced_active_devices_panel(),
-                            ],
-                        ),
-                        self.create_export_tools_section(sidebar=True),
+                        self.create_enhanced_access_events_panel(),
+                        self.create_user_patterns_panel(),
+                        self.create_enhanced_active_devices_panel(),
                     ],
                 ),
+
+                # Export & tools section directly below
+                self.create_export_tools_section(sidebar=False),
+
                 # Row 2: Peak activity, security overview and visualization
                 html.Div(
                     id="advanced-analytics-panels-container",
                     style={
                         "display": "flex",
-                        "justifyContent": "space-around",
+                        "justifyContent": "space-between",
+                        "gap": "20px",
                         "marginBottom": "30px",
                         "width": "90%",
                         "margin": "0 auto 30px auto",
+                        "flexWrap": "wrap",
                     },
                     children=[
                         self.create_peak_activity_panel(),
