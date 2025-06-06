@@ -236,7 +236,7 @@ def register_callbacks(app_instance: Dash):
             "advanced": ts_advanced or 0,
             "export": ts_export or 0,
         }
-        active_tab = max(timestamps, key=timestamps.get)
+        active_tab = max(timestamps, key=lambda k: timestamps[k])
         if active_tab == "overview":
             return overview_layout()
         elif active_tab == "advanced":
@@ -262,7 +262,7 @@ def register_callbacks(app_instance: Dash):
             "advanced": ts_advanced or 0,
             "export": ts_export or 0,
         }
-        active = max(timestamps, key=timestamps.get)
+        active = max(timestamps, key=lambda k: timestamps[k])
         return [
             "tab active" if active == "overview" else "tab",
             "tab active" if active == "advanced" else "tab",

@@ -87,7 +87,6 @@ button:hover, .dash-button:hover {
   background-color: var(--color-accent-hover) !important;
 }
 
-=
 button:active {
   transform: scale(0.98);
 }
