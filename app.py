@@ -204,7 +204,6 @@ def _integrate_enhanced_features_into_layout_v6(base_layout, main_logo_path):
         
         all_existing_ids = collect_existing_ids(base_children)
         print(f"🔍 Found existing IDs: {all_existing_ids}")
-        ######!!!!!
         
         def process_children(children):
             """Recursively process children and replace sections where needed"""
@@ -250,7 +249,19 @@ def _integrate_enhanced_features_into_layout_v6(base_layout, main_logo_path):
 
         enhanced_children = process_children(base_children)
 
-        # Add enhanced data stores    #####
+        # Add missing containers if not present
+        if 'processing-status' not in all_existing_ids:
+            enhanced_children.append(html.Div(id='processing-status', style={
+                'color': '#2196F3',
+                'textAlign': 'center',
+                'margin': '10px',
+                'fontSize': '16px',
+                'fontWeight': '500'
+            }))
+        if 'interactive-setup-container' not in all_existing_ids:
+            enhanced_children.append(_create_comprehensive_setup_container_v6())
+
+        # Add enhanced data stores
         enhanced_children.append(_create_enhanced_data_stores_v6())
         
         print(f"✅ Layout integration complete. Enhanced sections: {existing_sections}")
