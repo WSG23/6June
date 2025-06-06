@@ -1,5 +1,6 @@
 import dash
 from dash import Dash, html, dcc, Input, Output
+from ui.components.upload import create_simple_upload_component
 
 # Temporary Dash app to get the asset URL for custom.css
 _tmp = Dash(__name__)
@@ -148,23 +149,9 @@ def create_main_layout(app_instance: Dash) -> html.Div:
                         id="upload-section",
                         className="card",
                         children=[
-                            html.Div(
-                                className="upload-box",
-                                children=[
-                                    html.I(
-                                        className="fa fa-upload fa-2x",
-                                        style={"marginBottom": "10px", "color": "var(--color-text-secondary)"},
-                                    ),
-                                    html.Div(
-                                        "Drop your CSV or JSON file here",
-                                        style={"fontSize": "18px", "fontWeight": "500", "marginBottom": "5px"},
-                                    ),
-                                    html.Div(
-                                        "or click to browse",
-                                        style={"fontSize": "14px", "color": "var(--color-text-tertiary)"},
-                                    ),
-                                ],
-                            )
+                            create_simple_upload_component(
+                                app_instance.get_asset_url("upload_file_csv_icon.png")
+                            ).create_upload_area()
                         ],
                     ),
                     html.Div(
