@@ -35,6 +35,11 @@ touch ui/__init__.py ui/components/__init__.py ui/handlers/__init__.py ui/utils/
 - Create `ui/components/upload.py` with the `UploadComponent` class
 - This centralizes all upload-related UI definitions
 
+#### B. Update `app.py`
+- Import new UI components and handlers
+- Update callback registration to use new system
+- Remove old upload callback registration
+
 #### B. Upload Handlers
 - Create `ui/handlers/upload_handlers.py` with the `UploadHandlers` class
 - This contains all upload callback logic
