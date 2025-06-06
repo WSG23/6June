@@ -204,7 +204,6 @@ def _integrate_enhanced_features_into_layout_v6(base_layout, main_logo_path):
         
         all_existing_ids = collect_existing_ids(base_children)
         print(f"🔍 Found existing IDs: {all_existing_ids}")
-        ######!!!!!
         
         def process_children(children):
             """Recursively process children and replace sections where needed"""
@@ -250,7 +249,19 @@ def _integrate_enhanced_features_into_layout_v6(base_layout, main_logo_path):
 
         enhanced_children = process_children(base_children)
 
-        # Add enhanced data stores    #####
+        # Add missing containers if not present
+        if 'processing-status' not in all_existing_ids:
+            enhanced_children.append(html.Div(id='processing-status', style={
+                'color': '#2196F3',
+                'textAlign': 'center',
+                'margin': '10px',
+                'fontSize': '16px',
+                'fontWeight': '500'
+            }))
+        if 'interactive-setup-container' not in all_existing_ids:
+            enhanced_children.append(_create_comprehensive_setup_container_v6())
+
+        # Add enhanced data stores
         enhanced_children.append(_create_enhanced_data_stores_v6())
         
         print(f"✅ Layout integration complete. Enhanced sections: {existing_sections}")
@@ -831,7 +842,8 @@ print(f"📊 Components status: {components_available}")
         Output('all-doors-from-csv-store', 'data'),
         Output('interactive-setup-container', 'style'),
         Output('upload-data', 'style'),
-        Output('processed-data-store', 'data')  # Store processed data
+        Output('processed-data-store', 'data'),  # Store processed data
+        Output('upload-icon', 'src'),            # NEW: change icon on success/fail
     ],
     Input('upload-data', 'contents'),
     State('upload-data', 'filename'),
@@ -841,7 +853,7 @@ def enhanced_file_upload_with_processing_v6(contents, filename):
     """Version 6.0 - Enhanced upload callback with comprehensive processing"""
     print(f"🔄 Version 6.0 upload callback triggered: {filename}")
     if not contents:
-        return None, None, "", None, {'display': 'none'}, {}, None
+        return None, None, "", None, {'display': 'none'}, {}, None, ICON_UPLOAD_DEFAULT
     
     try:
         print(f"📄 Processing file: {filename}")
@@ -857,7 +869,16 @@ def enhanced_file_upload_with_processing_v6(contents, filename):
             df = pd.read_json(io.StringIO(decoded.decode('utf-8')))
         else:
             print("❌ Unsupported file type")
-            return None, None, "Error: Please upload a CSV or JSON file", None, {'display': 'none'}, {}, None
+            return (
+                None,
+                None,
+                "Error: Please upload a CSV or JSON file",
+                None,
+                {'display': 'none'},
+                {},
+                None,
+                ICON_UPLOAD_FAIL,
+            )
 
         headers = df.columns.tolist()
         print(f"✅ File loaded: {len(df)} rows, {len(headers)} columns")
@@ -930,14 +951,30 @@ def enhanced_file_upload_with_processing_v6(contents, filename):
         }
         
         print("✅ Version 6.0 enhanced upload successful with comprehensive data processing")
-        return (contents, headers, 
-                f"✅ Uploaded: {filename} ({len(df):,} rows, {len(headers)} columns) - Ready for Version 6.0 enhanced analytics!",
-                doors, setup_style, upload_success_style, processed_data)
+        return (
+            contents,
+            headers,
+            f"✅ Uploaded: {filename} ({len(df):,} rows, {len(headers)} columns) - Ready for Version 6.0 enhanced analytics!",
+            doors,
+            setup_style,
+            upload_success_style,
+            processed_data,
+            ICON_UPLOAD_SUCCESS,
+        )
         
     except Exception as e:
         print(f"❌ Error in Version 6.0 enhanced upload: {e}")
         traceback.print_exc()
-        return None, None, f"❌ Error processing {filename}: {str(e)}", None, {'display': 'none'}, {}, None
+        return (
+            None,
+            None,
+            f"❌ Error processing {filename}: {str(e)}",
+            None,
+            {'display': 'none'},
+            {},
+            None,
+            ICON_UPLOAD_FAIL,
+        )
 
 # 2. Enhanced Mapping Callback with Auto-Suggestions
 @app.callback(

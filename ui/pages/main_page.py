@@ -1,6 +1,6 @@
 import dash
 from dash import Dash, html, dcc, Input, Output
-from ui.components.upload import create_simple_upload_component
+from ui.components.upload import create_enhanced_upload_component
 
 # Temporary Dash app to get the asset URL for custom.css
 _tmp = Dash(__name__)
@@ -116,6 +116,12 @@ def export_layout():
 
 
 def create_main_layout(app_instance: Dash) -> html.Div:
+    upload_component = create_enhanced_upload_component(
+        app_instance.get_asset_url("upload_file_csv_icon.png"),
+        app_instance.get_asset_url("upload_file_csv_icon_success.png"),
+        app_instance.get_asset_url("upload_file_csv_icon_fail.png"),
+    )
+
     return html.Div(
         id="app-container",
         children=[
@@ -149,9 +155,7 @@ def create_main_layout(app_instance: Dash) -> html.Div:
                         id="upload-section",
                         className="card",
                         children=[
-                            create_simple_upload_component(
-                                app_instance.get_asset_url("upload_file_csv_icon.png")
-                            ).create_upload_area()
+                            upload_component.create_upload_area(),
                         ],
                     ),
                     html.Div(
@@ -193,6 +197,17 @@ def create_main_layout(app_instance: Dash) -> html.Div:
                     "padding": "0 20px",
                 },
             ),
+            html.Div(
+                id="processing-status",
+                style={
+                    "color": "#2196F3",
+                    "textAlign": "center",
+                    "margin": "10px",
+                    "fontSize": "16px",
+                    "fontWeight": "500",
+                },
+            ),
+            upload_component.create_interactive_setup_container(),
             # ─────── Tabs ───────
             html.Div(
                 id="tabs-container",
@@ -204,6 +219,12 @@ def create_main_layout(app_instance: Dash) -> html.Div:
             ),
             # ─────── Tab Content (filled by callback) ───────
             html.Div(id="tab-content"),
+
+            # Data stores required by callbacks
+            dcc.Store(id="uploaded-file-store"),
+            dcc.Store(id="csv-headers-store", storage_type="session"),
+            dcc.Store(id="processed-data-store", storage_type="session"),
+            dcc.Store(id="enhanced-metrics-store", storage_type="session"),
         ],
     )
 
