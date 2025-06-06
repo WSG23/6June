@@ -6,13 +6,16 @@ Unit tests for data processing components - FIXED VERSION
 import pytest
 import pandas as pd
 import io
+import logging
 from unittest.mock import Mock, patch
 
 # FIXED IMPORTS - using your actual project structure
 from services.csv_loader import load_csv_event_log
 from services.secure_file_handler import SecureFileHandler
 from utils.error_handler import ValidationError, DataProcessingError, FileProcessingError
-from constants import REQUIRED_INTERNAL_COLUMNS
+from config.settings import REQUIRED_INTERNAL_COLUMNS
+
+logger = logging.getLogger(__name__)
 
 
 def is_success_result(result) -> bool:
