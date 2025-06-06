@@ -20,6 +20,16 @@ def test_secure_file_handler_accepts_csv():
     assert 'file_io' in result
 
 
+def test_secure_file_handler_accepts_json():
+    handler = SecureFileHandler()
+    data = '{"hello": "world"}'
+    encoded = base64.b64encode(data.encode('utf-8')).decode('utf-8')
+    content = f'data:application/json;base64,{encoded}'
+    result = handler.process_uploaded_file(content, 'sample.json')
+    assert result['success'] is True
+    assert 'file_io' in result
+
+
 def test_secure_file_handler_rejects_bad_extension():
     handler = SecureFileHandler()
     result = handler.process_uploaded_file(_load_sample_base64(), 'bad.txt')
