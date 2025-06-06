@@ -1,16 +1,15 @@
 # tests/test_simple_loader.py
 """
-Simple test to debug the enhanced CSV loader
+Simple test to debug the CSV loader service
 """
 
 import io
 import pandas as pd
-from data_io.enhanced_csv_loader import EnhancedCSVLoader
+from services.csv_loader import load_csv_event_log
 from constants import REQUIRED_INTERNAL_COLUMNS
 
 def test_loader_debug():
-    """Debug the enhanced CSV loader"""
-    loader = EnhancedCSVLoader()
+    """Debug the CSV loader service"""
     
     # Simple CSV content
     csv_content = """Timestamp,UserID,DoorID,EventType
@@ -29,7 +28,7 @@ def test_loader_debug():
     logger.info("🔍 Mapping:", column_mapping)
     
     csv_io = io.StringIO(csv_content)
-    result = loader.load_csv_event_log(csv_io, column_mapping)
+    result = load_csv_event_log(csv_io, column_mapping)
     
     logger.info("🔍 Result type:", type(result))
     logger.info("🔍 Result:", result)
