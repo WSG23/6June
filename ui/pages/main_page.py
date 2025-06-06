@@ -133,12 +133,13 @@ def create_main_layout(app_instance: Dash) -> html.Div:
                 children=[
                     html.Div(
                         children=[
-                            html.Img(src=app_instance.get_asset_url("logo.png"), style={"height": "40px"}),
-
+                            html.Img(
+                                src=app_instance.get_asset_url("yosai_logo_name_black.png"),
+                                style={"height": "40px"},
+                            ),
                             html.H1(
-                                " Enhanced Analytics Dashboard",
-                                className="ml-2",
-
+                                "[Yōsai Intel] Enhanced Analytics Dashboard",
+                                className="brand-title",
                             ),
                         ],
                         style={"display": "flex", "alignItems": "center"},
