@@ -68,7 +68,8 @@ def create_production_app():
     }
     create_upload_handlers(app, upload_component, icons).register_callbacks()
     create_mapping_handlers(app, mapping_component).register_callbacks()
-    create_classification_handlers(app, classification_component).register_callbacks()
+    # ClassificationHandlers automatically register callbacks on instantiation
+    create_classification_handlers(app, classification_component)
 
     # Create main layout
     app.layout = create_main_layout(app)
