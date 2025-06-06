@@ -25,7 +25,6 @@ FEATURES:
 - Real-time analytics dashboard
 - Interactive security model graph
 """
-
 import dash
 from dash import Input, Output, State, html, dcc, no_update, callback, ALL
 import dash_bootstrap_components as dbc
@@ -36,6 +35,7 @@ import traceback
 import pandas as pd
 import base64
 import io
+from datetime import datetime
 import dash_cytoscape as cyto
 from datetime import datetime
 from ui.themes.style_config import (
@@ -47,10 +47,13 @@ from ui.themes.style_config import (
 )
 from config.settings import DEFAULT_ICONS, REQUIRED_INTERNAL_COLUMNS
 
-# Add project root to path
+## Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-print("🚀 Starting Yōsai Enhanced Analytics Dashboard v6.0...")
+from config.settings import DEFAULT_ICONS, REQUIRED_INTERNAL_COLUMNS
+
+print("🚀 Starting Yōsai Enhanced Analytics Dashboard...")
+
 print("📊 Initializing comprehensive integrated system...")
 
 # ============================================================================
@@ -61,14 +64,8 @@ print("📊 Initializing comprehensive integrated system...")
 
 # Enhanced component availability tracking
 components_available = {
-    'enhanced_stats': False,
-    'upload': False,
-    'mapping': False,
-    'classification': False,
-    'cytoscape': False,
     'main_layout': False,
-    'plotly': False,
-    'pandas': True  # Always available
+    'cytoscape': False,
 }
 
 component_instances = {}
@@ -119,6 +116,7 @@ try:
     print("✅ Cytoscape available")
 except ImportError as e:
     print(f"⚠️ Cytoscape not available: {e}")
+   
    
 
 # Plotly for charts
@@ -204,6 +202,7 @@ def _integrate_enhanced_features_into_layout_v6(base_layout, main_logo_path):
         
         all_existing_ids = collect_existing_ids(base_children)
         print(f"🔍 Found existing IDs: {all_existing_ids}")
+        ######!!!!!
         
         def process_children(children):
             """Recursively process children and replace sections where needed"""
@@ -249,19 +248,7 @@ def _integrate_enhanced_features_into_layout_v6(base_layout, main_logo_path):
 
         enhanced_children = process_children(base_children)
 
-        # Add missing containers if not present
-        if 'processing-status' not in all_existing_ids:
-            enhanced_children.append(html.Div(id='processing-status', style={
-                'color': '#2196F3',
-                'textAlign': 'center',
-                'margin': '10px',
-                'fontSize': '16px',
-                'fontWeight': '500'
-            }))
-        if 'interactive-setup-container' not in all_existing_ids:
-            enhanced_children.append(_create_comprehensive_setup_container_v6())
-
-        # Add enhanced data stores
+        # Add enhanced data stores    #####
         enhanced_children.append(_create_enhanced_data_stores_v6())
         
         print(f"✅ Layout integration complete. Enhanced sections: {existing_sections}")
@@ -438,6 +425,7 @@ def _create_comprehensive_setup_container_v6():
             ], style={
                 'color': '#A0AEC0', 'textAlign': 'center', 'marginBottom': '20px'
             }),
+            # FIX: Add the missing dropdown-mapping-area element
             html.Div(id='dropdown-mapping-area'),
             html.Div(id='mapping-validation-message', style={'display': 'none'}),
             html.Button('Confirm Header Mapping & Proceed', id='confirm-header-map-button',
@@ -781,6 +769,7 @@ def _create_comprehensive_data_stores_v6():
         dcc.Store(id='current-entrance-offset-store', data=0, storage_type='session'),
         dcc.Store(id='manual-door-classifications-store', storage_type='local'),
         dcc.Store(id='num-floors-store', storage_type='session', data=4),
+        # FIX: Add the missing all-doors-from-csv-store
         dcc.Store(id='all-doors-from-csv-store', storage_type='session'),
         dcc.Store(id='processed-data-store', storage_type='session'),  # Version 6.0: processed data
         dcc.Store(id='enhanced-metrics-store', storage_type='session'),  # Version 6.0: metrics
@@ -793,6 +782,8 @@ def _create_enhanced_data_stores_v6():
         dcc.Store(id='csv-headers-store', storage_type='session'),
         dcc.Store(id='processed-data-store', storage_type='session'),
         dcc.Store(id='enhanced-metrics-store', storage_type='session'),
+        # FIX: Add the missing all-doors-from-csv-store here too
+        dcc.Store(id='all-doors-from-csv-store', storage_type='session'),
     ])
 
 # ============================================================================
@@ -811,12 +802,13 @@ app = dash.Dash(
 )
 
 server = app.server
-app.title = "Yōsai Enhanced Analytics Dashboard v6.0"
+app.title = "Yōsai Enhanced Analytics Dashboard"
 
 # Asset paths
 ICON_UPLOAD_DEFAULT = app.get_asset_url('upload_file_csv_icon.png')
 ICON_UPLOAD_SUCCESS = app.get_asset_url('upload_file_csv_icon_success.png')
 ICON_UPLOAD_FAIL = app.get_asset_url('upload_file_csv_icon_fail.png')
+MAIN_LOGO_PATH = app.get_asset_url('logo_white.png')
 MAIN_LOGO_PATH = app.get_asset_url('logo_white.png')
 
 print(f"📁 Assets loaded: {ICON_UPLOAD_DEFAULT}")
@@ -841,7 +833,6 @@ print(f"📊 Components status: {components_available}")
         Output('processing-status', 'children'),
         Output('all-doors-from-csv-store', 'data'),
         Output('interactive-setup-container', 'style'),
-        Output('mapping-ui-section', 'style'),
         Output('upload-data', 'style'),
         Output('processed-data-store', 'data'),  # Store processed data
         Output('upload-icon', 'src'),            # NEW: change icon on success/fail
@@ -854,17 +845,7 @@ def enhanced_file_upload_with_processing_v6(contents, filename):
     """Version 6.0 - Enhanced upload callback with comprehensive processing"""
     print(f"🔄 Version 6.0 upload callback triggered: {filename}")
     if not contents:
-        return (
-            None,
-            None,
-            "",
-            None,
-            {'display': 'none'},
-            {'display': 'none'},
-            {},
-            None,
-            ICON_UPLOAD_DEFAULT,
-        )
+        return None, None, "", None, {'display': 'none'}, {}, None, ICON_UPLOAD_DEFAULT
     
     try:
         print(f"📄 Processing file: {filename}")
@@ -950,9 +931,6 @@ def enhanced_file_upload_with_processing_v6(contents, filename):
             'border': '1px solid #2D3748',
             'boxShadow': '0 10px 15px rgba(0, 0, 0, 0.1)'
         }
-
-        # Show mapping section on successful upload
-        mapping_style = {'display': 'block'}
         
         # Enhanced upload success style
         upload_success_style = {
@@ -965,14 +943,12 @@ def enhanced_file_upload_with_processing_v6(contents, filename):
         }
         
         print("✅ Version 6.0 enhanced upload successful with comprehensive data processing")
-        status = f"✅ Uploaded: {filename} ({len(df)} rows, {len(headers)} columns)"
         return (
             contents,
             headers,
-            status,
+            f"✅ Uploaded: {filename} ({len(df):,} rows, {len(headers)} columns) - Ready for Version 6.0 enhanced analytics!",
             doors,
             setup_style,
-            mapping_style,
             upload_success_style,
             processed_data,
             ICON_UPLOAD_SUCCESS,
@@ -986,7 +962,6 @@ def enhanced_file_upload_with_processing_v6(contents, filename):
             None,
             f"❌ Error processing {filename}: {str(e)}",
             None,
-            {'display': 'none'},
             {'display': 'none'},
             {},
             None,
@@ -1992,6 +1967,182 @@ app.clientside_callback(
     Input('manual-map-toggle', 'value'),
     prevent_initial_call=True
 )
+
+# 2. Mapping Dropdowns Callback - Creates dropdowns in dropdown-mapping-area
+@app.callback(
+    Output('dropdown-mapping-area', 'children'),
+    Input('csv-headers-store', 'data'),
+    prevent_initial_call=True
+)
+def create_mapping_dropdowns(headers):
+    """Create mapping dropdowns when CSV is uploaded"""
+    print(f"🗺️ Mapping callback triggered with headers: {headers}")
+    
+    if not headers:
+        return []
+    
+    try:
+        print(f"🗺️ Creating mapping dropdowns for {len(headers)} headers")
+        
+        dropdowns = []
+        for internal_key, display_name in REQUIRED_INTERNAL_COLUMNS.items():
+            # Auto-suggest matching headers
+            suggested_value = None
+            for header in headers:
+                if any(keyword in header.lower() for keyword in [
+                    'time' if 'Time' in internal_key else '',
+                    'user' if 'User' in internal_key else '',
+                    'door' if 'Door' in internal_key else '',
+                    'event' if 'Event' in internal_key else ''
+                ]):
+                    suggested_value = header
+                    break
+            
+            dropdowns.append(
+                html.Div([
+                    html.Label(f"{display_name}:", style={
+                        'color': '#F7FAFC', 'fontWeight': '600', 
+                        'marginBottom': '8px', 'display': 'block'
+                    }),
+                    dcc.Dropdown(
+                        id={'type': 'mapping-dropdown', 'index': internal_key},
+                        options=[{'label': h, 'value': h} for h in headers],
+                        value=suggested_value,
+                        placeholder=f"Select column for {display_name}...",
+                        style={'marginBottom': '16px'}
+                    ),
+                    html.Small(
+                        f"✅ Auto-suggested: {suggested_value}" if suggested_value else "⚠️ Please select manually",
+                        style={
+                            'color': '#2DBE6C' if suggested_value else '#FFB020',
+                            'fontSize': '0.75rem', 'marginBottom': '12px', 'display': 'block'
+                        }
+                    )
+                ], style={'marginBottom': '24px'})
+            )
+        
+        # Add confirm button
+        dropdowns.append(
+            html.Button('Confirm Header Mapping & Proceed', 
+                       id='confirm-header-map-button',
+                       n_clicks=0,
+                       style={
+                           'display': 'block', 'margin': '25px auto', 'padding': '12px 30px',
+                           'backgroundColor': '#2196F3', 'color': 'white', 'border': 'none',
+                           'borderRadius': '8px', 'cursor': 'pointer', 'fontSize': '16px'
+                       })
+        )
+        
+        print(f"✅ Created {len(dropdowns)-1} mapping controls plus confirm button")
+        return dropdowns
+        
+    except Exception as e:
+        print(f"❌ Error creating mapping: {e}")
+        return [html.P(f"Error creating mapping dropdowns: {str(e)}", 
+                      style={'color': '#E02020', 'textAlign': 'center'})]
+
+# 3. Mapping Confirmation Callback
+@app.callback(
+    [
+        Output('mapping-ui-section', 'style'),
+        Output('entrance-verification-ui-section', 'style'),
+        Output('processing-status', 'children', allow_duplicate=True)
+    ],
+    Input('confirm-header-map-button', 'n_clicks'),
+    [
+        State({'type': 'mapping-dropdown', 'index': ALL}, 'value'),
+        State({'type': 'mapping-dropdown', 'index': ALL}, 'id')
+    ],
+    prevent_initial_call=True
+)
+def confirm_mapping(n_clicks, values, ids):
+    """Confirm mapping and show next step"""
+    print(f"🔄 Mapping confirmation: n_clicks={n_clicks}")
+    
+    if not n_clicks:
+        return {'display': 'block'}, {'display': 'none'}, no_update
+    
+    try:
+        # Validate mapping
+        mapped_count = sum(1 for v in values if v is not None)
+        required_count = len(REQUIRED_INTERNAL_COLUMNS)
+        
+        print(f"📊 Mapping validation: {mapped_count}/{required_count} columns mapped")
+        
+        if mapped_count < required_count:
+            missing_fields = [
+                REQUIRED_INTERNAL_COLUMNS[ids[i]['index']] 
+                for i, v in enumerate(values) if v is None
+            ]
+            return (
+                {'display': 'block'}, 
+                {'display': 'none'}, 
+                f"⚠️ Please map all required columns. Missing: {', '.join(missing_fields[:2])}"
+            )
+        
+        print("✅ Mapping confirmed, showing next step")
+        return (
+            {'display': 'none'},
+            {'display': 'block'},
+            "✅ Column mapping completed! Ready for analysis."
+        )
+        
+    except Exception as e:
+        print(f"❌ Error in mapping confirmation: {e}")
+        return {'display': 'block'}, {'display': 'none'}, f"❌ Error: {str(e)}"
+
+# 4. Generate Analysis Callback (simplified)
+@app.callback(
+    Output('processing-status', 'children', allow_duplicate=True),
+    Input('confirm-and-generate-button', 'n_clicks'),
+    [
+        State('uploaded-file-store', 'data'),
+        State('csv-headers-store', 'data'),
+        State('all-doors-from-csv-store', 'data'),
+        State({'type': 'mapping-dropdown', 'index': ALL}, 'value'),
+        State({'type': 'mapping-dropdown', 'index': ALL}, 'id')
+    ],
+    prevent_initial_call=True
+)
+def generate_analysis(n_clicks, file_data, headers, doors, mapping_values, mapping_ids):
+    """Generate analysis with available data"""
+    print(f"🔄 Generate analysis: n_clicks={n_clicks}")
+    
+    if not n_clicks or not file_data:
+        return "Click generate to start analysis"
+    
+    try:
+        print("🎉 Generating analysis...")
+        
+        # Process the data
+        content_type, content_string = file_data.split(',')
+        decoded = base64.b64decode(content_string)
+        df = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
+        
+        # Apply column mapping if available
+        if mapping_values and mapping_ids:
+            column_mapping = {}
+            for value, id_dict in zip(mapping_values, mapping_ids):
+                if value:
+                    internal_key = id_dict['index']
+                    display_name = REQUIRED_INTERNAL_COLUMNS[internal_key]
+                    column_mapping[value] = display_name
+            
+            if column_mapping:
+                df = df.rename(columns=column_mapping)
+                print(f"✅ Applied column mapping: {column_mapping}")
+        
+        # Generate summary
+        total_events = len(df)
+        unique_users = df.iloc[:, 1].nunique() if len(df.columns) > 1 else 0
+        door_count = len(doors) if doors else 0
+        
+        summary = (
+            f"🎉 Analysis Complete! "
+            f"Processed {total_events:,} events from {unique_users} users across {door_count} doors. "
+            f"Data ready for visualization and reporting."
+        )
+
 
 # ============================================================================
 # STARTUP AND FINAL CONFIGURATION
