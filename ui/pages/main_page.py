@@ -144,14 +144,12 @@ def create_main_layout(app_instance: Dash) -> html.Div:
                                     html.I(className="fa fa-upload fa-2x", style={"marginBottom": "10px", "color": "var(--color-text-secondary)"}),
                                     html.Div("Drop your CSV or JSON file here", style={"fontSize": "18px", "fontWeight": "500", "marginBottom": "5px"}),
                                     html.Div("or click to browse", style={"fontSize": "14px", "color": "var(--color-text-tertiary)"}),
-
-                                ],
+               ],
                             )
                         ],
                     ),
                     html.Div(
                         id="chart-controls",
-
                         className="card",
                         children=[
                             html.Div("Chart Type:", style={"fontWeight": "600", "marginBottom": "5px"}),
@@ -242,8 +240,6 @@ def register_callbacks(app_instance: Dash):
             "tab active" if active == "advanced" else "tab",
             "tab active" if active == "export" else "tab",
         ]
-
-
 
 if __name__ == "__main__":
     app.layout = create_main_layout(app)
