@@ -216,14 +216,17 @@ class UploadHandlers:
         
         show_mapping_style = MAPPING_STYLES['section']
 
+
         return (
-            result['contents'],  # uploaded file store
-            result['headers'],  # csv headers store
+            result['contents'],      # uploaded file store
+            result['headers'],       # csv headers store
             result['mapping_dropdowns'],  # dropdown mapping area
+
             confirm_button_style_visible,  # confirm button style
             show_interactive_setup_style,  # interactive setup container
             show_mapping_style,  # mapping section style
             processing_status_msg,  # processing status
+
             self.icon_upload_success,  # upload icon src
             upload_styles['success'],  # upload box style
             hide_style, hide_style, hide_style, hide_style,  # various containers
