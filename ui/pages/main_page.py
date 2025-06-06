@@ -2,6 +2,7 @@ import dash
 from dash import Dash, html, dcc, Input, Output
 from ui.components.upload import create_enhanced_upload_component
 from ui.components.classification import create_classification_component
+from ui.components.graph import create_graph_component
 
 # Temporary Dash app to get the asset URL for custom.css
 _tmp = Dash(__name__)
@@ -123,12 +124,14 @@ def create_main_layout(app_instance: Dash) -> html.Div:
         app_instance.get_asset_url("upload_file_csv_icon_fail.png"),
     )
     classification_component = create_classification_component()
+    graph_component = create_graph_component()
 
     return html.Div(
         id="app-container",
         children=[
             html.Div(upload_component.create_upload_area(), style={"width": "100%"}),
             classification_component.create_facility_setup_card(),
+            graph_component.create_graph_container(),
             html.Div(
                 className="flex-row",
                 children=[
