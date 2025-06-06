@@ -234,4 +234,69 @@ button:active {
   }
 }
 
+/* ── CARD STYLES ───────────────────────────────────────────────────────────── */
+.card {
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 20px !important;
+  margin: 10px !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: all var(--transition-normal) !important;
+}
+.card:hover {
+  box-shadow: var(--shadow-lg) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ── FLEX ROW LAYOUT ─────────────────────────────────────────────────────── */
+.flex-row {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  margin: 20px 0 !important;
+}
+.flex-row .card {
+  flex: 0 0 auto !important;
+  min-width: 250px !important;
+}
+@media (max-width: 768px) {
+  .flex-row {
+    flex-wrap: wrap !important;
+  }
+  .flex-row .card {
+    min-width: 100% !important;
+  }
+}
+
+/* ── TOGGLE BUTTONS ───────────────────────────────────────────────────────── */
+.toggle-btn {
+  border: 2px solid !important;
+  border-radius: 20px !important;
+  padding: 10px 20px !important;
+  margin: 8px 0 !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  font-weight: 500 !important;
+  transition: all var(--transition-fast) !important;
+  color: var(--color-text-primary) !important;
+  background-color: var(--color-border) !important;
+}
+.toggle-btn.blue {
+  border-color: var(--color-accent) !important;
+}
+.toggle-btn.green {
+  border-color: var(--color-success) !important;
+}
+.toggle-btn.yellow {
+  border-color: var(--color-warning) !important;
+}
+.toggle-btn.red {
+  border-color: var(--color-critical) !important;
+}
+.toggle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  transform: translateY(-1px) !important;
+}
+
 /* --- custom.css END --- */

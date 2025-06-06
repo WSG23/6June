@@ -1,6 +1,7 @@
 import dash
 from dash import Dash, html, dcc, Input, Output
 from ui.components.upload import create_enhanced_upload_component
+from ui.components.classification import create_classification_component
 
 # Temporary Dash app to get the asset URL for custom.css
 _tmp = Dash(__name__)
@@ -121,105 +122,120 @@ def create_main_layout(app_instance: Dash) -> html.Div:
         app_instance.get_asset_url("upload_file_csv_icon_success.png"),
         app_instance.get_asset_url("upload_file_csv_icon_fail.png"),
     )
+    classification_component = create_classification_component()
 
     return html.Div(
         id="app-container",
         children=[
-            # ─────── Dashboard Header ───────
+            html.Div(upload_component.create_upload_area(), style={"width": "100%"}),
+            classification_component.create_facility_setup_card(),
             html.Div(
-                id="dashboard-title",
+                className="flex-row",
                 children=[
                     html.Div(
+                        id="access-events-card",
+                        className="card",
                         children=[
-                            html.Img(
-                                src=app_instance.get_asset_url("yosai_logo_name_black.png"),
-                                style={"height": "40px"},
-                            ),
-                            html.H1(
-                                "[Yōsai Intel] Enhanced Analytics Dashboard",
-                                className="brand-title",
-                            ),
+                            html.H3("Access Events"),
+                            html.Div(id="total-access-events-H1"),
+                            html.Div(id="event-date-range-P"),
                         ],
-                        style={"display": "flex", "alignItems": "center"},
-                    ),
-                    html.Button("Advanced View ⏷", id="advanced-view-button", n_clicks=0),
-                ],
-            ),
-
-            # ─────── Upload Section & Chart Controls ───────
-            html.Div(
-                id="controls-row",
-                children=[
-                    html.Div(
-                        id="upload-section",
-                        className="card",
-                        children=[upload_component.create_upload_area()],
                     ),
                     html.Div(
-                        id="chart-controls",
+                        id="user-analytics-card",
                         className="card",
                         children=[
-                            html.Div(
-                                "Chart Type:",
-                                style={"fontWeight": "600", "marginBottom": "5px"},
-                            ),
+                            html.H3("User Analytics"),
+                            html.Div(id="stats-unique-users"),
+                            html.Div(id="stats-avg-events-per-user"),
+                            html.Div(id="stats-most-active-user"),
+                            html.Div(id="stats-devices-per-user"),
+                            html.Div(id="stats-peak-hour"),
+                        ],
+                    ),
+                    html.Div(
+                        id="device-analytics-card",
+                        className="card",
+                        children=[
+                            html.H3("Device Analytics"),
+                            html.Table([
+                                html.Thead(html.Tr([html.Th("DEVICE"), html.Th("EVENTS")])),
+                                html.Tbody(id="most-active-devices-table-body"),
+                            ]),
+                            html.Div(id="total-devices-count"),
+                            html.Div(id="entrance-devices-count"),
+                            html.Div(id="high-security-devices"),
+                        ],
+                    ),
+                    html.Div(
+                        id="peak-activity-card",
+                        className="card",
+                        children=[
+                            html.H3("Peak Activity"),
+                            html.Div(id="peak-hour-display"),
+                            html.Div(id="peak-day-display"),
+                            html.Div(id="weekday-percent"),
+                            html.Div(id="weekend-percent"),
+                        ],
+                    ),
+                    html.Div(
+                        id="security-overview-card",
+                        className="card",
+                        children=[
+                            html.H3("Security Overview"),
+                            html.Div(["🟢 ", html.Span(id="security-green-count")]),
+                            html.Div(["🔴 ", html.Span(id="security-red-count")]),
+                            html.Div(["🟡 ", html.Span(id="security-yellow-count")]),
+                            html.Div(id="security-compliance"),
+                            html.Div(id="security-alerts"),
+                        ],
+                    ),
+                    html.Div(
+                        id="advanced-analytics-card",
+                        className="card",
+                        children=[
+                            html.H3("Advanced Analytics"),
+                            html.Div("Traffic Pattern", id="toggle-traffic-pattern", className="toggle-btn blue"),
+                            html.Div("Security Score", id="toggle-security-score", className="toggle-btn green"),
+                            html.Div("Usage Efficiency", id="toggle-usage-efficiency", className="toggle-btn yellow"),
+                            html.Div("Anomaly Detection", id="toggle-anomaly-detection", className="toggle-btn red"),
+                        ],
+                    ),
+                    html.Div(
+                        id="data-visualization-card",
+                        className="card",
+                        style={"flex": "1"},
+                        children=[
+                            html.H3("Data Visualization"),
+                            html.Label("Chart Type:", htmlFor="chart-type-dropdown"),
                             dcc.Dropdown(
                                 id="chart-type-dropdown",
                                 options=[
                                     {"label": "Hourly Activity", "value": "hourly"},
-                                    {"label": "Daily Trends", "value": "daily"},
-                                    {"label": "Device Summary", "value": "device"},
+                                    {"label": "Security Distribution", "value": "security"},
+                                    {"label": "Heatmap (Day vs Hour)", "value": "heatmap"},
                                 ],
                                 value="hourly",
-                                clearable=False,
-                                style={"marginBottom": "15px"},
+                                style={"width": "200px", "marginBottom": "10px"},
                             ),
-                            html.Div(
-                                children=[
-                                    html.Button("🔍 Filter", id="filter-button", className="dash-button"),
-                                    html.Button(
-                                        "🧭 Time Range",
-                                        id="timerange-button",
-                                        className="dash-button",
-                                        style={"marginLeft": "10px"},
-                                    ),
-                                ],
-                                style={"display": "flex"},
-                            ),
+                            dcc.Graph(id="main-chart", config={"displayModeBar": True}, style={"height": "400px"}),
+                        ],
+                    ),
+                    html.Div(
+                        id="export-reports-card",
+                        className="card",
+                        style={"minWidth": "200px"},
+                        children=[
+                            html.H3("Export & Reports"),
+                            html.Button("📊 Export Stats CSV", id="export-csv-btn", className="btn btn-light", style={"marginBottom": "10px", "width": "100%"}),
+                            html.Button("💾 Download Charts", id="download-charts-btn", className="btn btn-light", style={"marginBottom": "10px", "width": "100%"}),
+                            html.Button("Generate Report", id="generate-report-btn", className="btn btn-primary", style={"marginBottom": "10px", "width": "100%"}),
+                            html.Button("🔄 Refresh Data", id="refresh-data-btn", className="btn btn-light", style={"width": "100%"}),
                         ],
                     ),
                 ],
-                style={
-                    "display": "grid",
-                    "gridTemplateColumns": "repeat(auto-fit, minmax(320px, 1fr))",
-                    "gap": "20px",
-                    "padding": "0 20px",
-                },
             ),
-            html.Div(
-                id="processing-status",
-                style={
-                    "color": "#2196F3",
-                    "textAlign": "center",
-                    "margin": "10px",
-                    "fontSize": "16px",
-                    "fontWeight": "500",
-                },
-            ),
-            upload_component.create_interactive_setup_container(),
-            # ─────── Tabs ───────
-            html.Div(
-                id="tabs-container",
-                children=[
-                    html.Div("Overview", id="tab-overview", className="tab active"),
-                    html.Div("Advanced", id="tab-advanced", className="tab"),
-                    html.Div("Export", id="tab-export", className="tab"),
-                ],
-            ),
-            # ─────── Tab Content (filled by callback) ───────
-            html.Div(id="tab-content"),
 
-            # Data stores required by callbacks
             dcc.Store(id="uploaded-file-store"),
             dcc.Store(id="csv-headers-store", storage_type="session"),
             dcc.Store(id="processed-data-store", storage_type="session"),
