@@ -29,10 +29,10 @@ def find_callback_registrations():
     callback_patterns = [
         r'@app\.callback',          # Raw string - properly escaped
         r'@.*\.callback',           # Raw string - properly escaped  
-        r'floor-slider-value',
-        r'num-floors-store',
-        r'Output.*floor-slider',
-        r'Input.*floor-slider',
+        r'num-floors-display',      # This one was fine
+        r'num-floors-store',        # This one was fine
+        r'Output.*num-floors',      # Raw string for safety
+        r'Input.*num-floors',       # Raw string for safety
     ]
     
     findings = {}

@@ -28,10 +28,10 @@ def find_callback_registrations():
     callback_patterns = [
         r'@app\.callback',
         r'@.*\.callback',
-        r'floor-slider-value',
+        r'num-floors-display',
         r'num-floors-store',
-        r'Output.*floor-slider',
-        r'Input.*floor-slider',
+        r'Output.*num-floors',
+        r'Input.*num-floors',
     ]
     
     findings = {}

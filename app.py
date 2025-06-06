@@ -331,8 +331,8 @@ def _add_missing_callback_elements(base_children, existing_ids):
         'tap-node-data-output', 'chart-type-selector', 'export-stats-csv',
         'export-charts-png', 'generate-pdf-report', 'refresh-analytics',
         'download-stats-csv', 'download-charts', 'download-report', 'export-status',
-        'floor-slider-value', 'manual-map-toggle', 'door-classification-table-container',
-        'door-classification-table', 'floor-slider'
+        'num-floors-display', 'manual-map-toggle', 'door-classification-table-container',
+        'door-classification-table', 'num-floors-input'
     ]
     
     # Add missing elements as hidden placeholders
@@ -497,11 +497,11 @@ def _create_complete_fixed_layout(app_instance, main_logo_path, icon_upload_defa
                         html.H4("Step 2: Facility Setup"),
                         html.Label("Number of floors:"),
                         dcc.Slider(
-                            id="floor-slider",
-                            min=1, max=48, step=1, value=48,
-                            marks={**{i: str(i) for i in range(1, 20, 2)}, 48: '48'}
+                            id="num-floors-input",
+                            min=1, max=50, step=1, value=4,
+                            marks={i: str(i) for i in range(1, 11)}
                         ),
-                        html.Div(id="floor-slider-value", children="48 floors"),
+                        html.Div(id="num-floors-display", children="4 floors"),
                         html.Label("Enable manual door classification?"),
                         dcc.RadioItems(
                             id='manual-map-toggle',
@@ -927,8 +927,8 @@ def toggle_classification(toggle_value):
 
 # 5. Floor display callback  
 @app.callback(
-    Output('floor-slider-value', 'children'),
-    Input('floor-slider', 'value'),
+    Output('num-floors-display', 'children'),
+    Input('num-floors-input', 'value'),
     prevent_initial_call=True
 )
 def update_floor_display(value):
@@ -988,7 +988,7 @@ def update_floor_display(value):
         State('all-doors-from-csv-store', 'data'),
         State({'type': 'mapping-dropdown', 'index': ALL}, 'value'),
         State({'type': 'mapping-dropdown', 'index': ALL}, 'id'),
-        State('floor-slider', 'value'),
+        State('num-floors-input', 'value'),
         State('manual-map-toggle', 'value')
     ],
     prevent_initial_call=True

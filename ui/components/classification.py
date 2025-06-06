@@ -50,28 +50,17 @@ class ClassificationComponent:
     
     def create_facility_setup_card(self):
         """Creates Step 2: Facility Setup card with modern slider and simplified toggle"""
-        return html.Div(
-            id='facility-setup-card',
-            className='card',
-            style=CLASSIFICATION_STYLES['setup_card'],
-            children=[
-                html.H2(
-                    "Step 2: Facility Setup",
-                    style={'textAlign': 'center', 'marginBottom': '16px'},
-                ),
-                # Floors Slider Row
-                self.create_floors_slider_row(),
-                # Simplified Toggle Row (no Bootstrap switch)
-                self.create_simplified_toggle_row(),
-                dbc.Button(
-                    'Confirm Selections & Generate Enhanced Analysis',
-                    id='confirm-and-generate-button',
-                    color='primary',
-                    className='w-100',
-                    style={'marginTop': '20px'}
-                ),
-            ],
-        )
+        return html.Div([
+            html.H4("Step 2: Facility Setup", 
+                   style={'color': COLORS['text_primary'], 'textAlign': 'center', 'marginBottom': '16px'}),
+            
+            # Floors Slider Row
+            self.create_floors_slider_row(),
+            
+            # Simplified Toggle Row (no Bootstrap switch)
+            self.create_simplified_toggle_row()
+            
+        ], style=CLASSIFICATION_STYLES['setup_card'])
     
     def create_floors_slider_row(self):
         """Creates the modern floors slider"""
@@ -88,14 +77,14 @@ class ClassificationComponent:
                 }
             ),
             
-            # Modern Slider (1-48 floors)
+            # Modern Slider (0-100 floors)
             dcc.Slider(
-                id="floor-slider",
-                min=1,
-                max=48,
-                step=1,
-                value=48,
-                marks={**{i: str(i) for i in range(1, 20, 2)}, 48: '48'},
+                id="num-floors-input",
+                min=0,
+                max=100,
+                step=5,
+                value=4,
+                marks={i: str(i) for i in range(0, 101, 5)},
                 tooltip={"always_visible": False, "placement": "bottom"},
                 updatemode="drag",
                 className="modern-floor-slider"
@@ -103,8 +92,8 @@ class ClassificationComponent:
             
             # Live display of slider value
             html.Div(
-                id="floor-slider-value",
-                children="48 floors",
+                id="num-floors-display",
+                children="4 floors",  # Default text
                 style={
                     "fontSize": "0.9rem",
                     "color": COLORS['text_secondary'],
