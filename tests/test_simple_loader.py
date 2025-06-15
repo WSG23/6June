@@ -7,7 +7,7 @@ import io
 import logging
 import pandas as pd
 from services.csv_loader import load_csv_event_log
-from config.settings import REQUIRED_INTERNAL_COLUMNS
+from config.settings.py import REQUIRED_INTERNAL_COLUMNS
 
 logger = logging.getLogger(__name__)
 

@@ -14,7 +14,7 @@ import numpy as np
 from datetime import datetime, timedelta
 import json
 from ui.themes.style_config import COLORS, SPACING, BORDER_RADIUS, SHADOWS, TYPOGRAPHY
-from config.settings import REQUIRED_INTERNAL_COLUMNS, SECURITY_LEVELS
+from config.settings.py import REQUIRED_INTERNAL_COLUMNS, SECURITY_LEVELS
 
 
 class EnhancedStatsComponent:

@@ -37,7 +37,7 @@ import numpy as np
 from typing import Dict, List, Tuple, Any, Optional
 import logging
 
-from config.settings import REQUIRED_INTERNAL_COLUMNS
+from config.settings.py import REQUIRED_INTERNAL_COLUMNS
 from core.exceptions import DataProcessingError
 
 logger = logging.getLogger(__name__)

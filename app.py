@@ -37,7 +37,7 @@ from ui.themes.style_config import (
     TYPOGRAPHY,
     SPACING,
 )
-from config.settings import DEFAULT_ICONS, REQUIRED_INTERNAL_COLUMNS
+from config.settings.py import DEFAULT_ICONS, REQUIRED_INTERNAL_COLUMNS
 
 print("🚀 Starting Yōsai Enhanced Analytics Dashboard (FIXED VERSION)...")
 

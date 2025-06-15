@@ -13,7 +13,7 @@ from unittest.mock import Mock, patch
 from services.csv_loader import load_csv_event_log
 from services.secure_file_handler import SecureFileHandler
 from utils.error_handler import ValidationError, DataProcessingError, FileProcessingError
-from config.settings import REQUIRED_INTERNAL_COLUMNS
+from config.settings.py import REQUIRED_INTERNAL_COLUMNS
 
 logger = logging.getLogger(__name__)
 

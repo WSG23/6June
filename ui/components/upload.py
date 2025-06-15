@@ -9,7 +9,7 @@ from typing import Dict, Any, Optional
 # Import from actual structure
 
 # Import default icons from unified settings
-from config.settings import DEFAULT_ICONS
+from config.settings.py import DEFAULT_ICONS
 from ui.themes.style_config import (
     COLORS,
     SPACING,

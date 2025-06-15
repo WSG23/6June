@@ -9,7 +9,7 @@ import re
 
 from core.exceptions import ValidationError, DataProcessingError
 from utils.validators import CSVValidator, MappingValidator
-from config.settings import REQUIRED_INTERNAL_COLUMNS, FILE_LIMITS
+from config.settings.py import REQUIRED_INTERNAL_COLUMNS, FILE_LIMITS
 
 class EnhancedDataValidator:
     """Enhanced data validation with detailed reporting"""

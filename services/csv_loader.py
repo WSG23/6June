@@ -6,7 +6,7 @@ from typing import Dict, Any, Optional, Union, IO
 import pandas as pd
 import io
 
-from config.settings import REQUIRED_INTERNAL_COLUMNS
+from config.settings.py import REQUIRED_INTERNAL_COLUMNS
 from utils.logging_config import get_logger
 from utils.error_handler import handle_data_error, ValidationError, DataProcessingError
 from utils.validators import MappingValidator

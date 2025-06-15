@@ -17,7 +17,7 @@ from ui.themes.graph_styles import upload_icon_img_style
 
 from ui.themes.style_config import UPLOAD_STYLES, MAPPING_STYLES, get_interactive_setup_style
 # Import required column mapping from unified settings
-from config.settings import REQUIRED_INTERNAL_COLUMNS
+from config.settings.py import REQUIRED_INTERNAL_COLUMNS
 
 
 from utils.logging_config import get_logger

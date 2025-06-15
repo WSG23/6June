@@ -16,7 +16,7 @@ import io
 from datetime import datetime
 from typing import Optional
 from ui.themes.style_config import COLORS, UI_VISIBILITY, SPACING, BORDER_RADIUS, SHADOWS
-from config.settings import SECURITY_LEVELS
+from config.settings.py import SECURITY_LEVELS
 
 class EnhancedStatsComponent:
     """Enhanced statistics component with advanced analytics and visualizations"""

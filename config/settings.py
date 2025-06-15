@@ -1,4 +1,4 @@
-# config/settings.py
+# config.settings.py
 """
 Unified Configuration - SINGLE SOURCE OF TRUTH
 Replaces all other config files
